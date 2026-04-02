@@ -20,18 +20,21 @@ import {
 
 type ViewMode = 'mobile' | 'tablet' | 'desktop'
 
+type ActionHandler = () => void | Promise<void>
+type CopyHandler = () => boolean | Promise<boolean>
+
 interface HeaderProps {
   template: Template
   markdown: string
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
   onToggleSidebar: () => void
-  onCopyRich: () => void
-  onCopyHTML: () => void
-  onExportHTML: () => void
-  onGeneratePoster: () => void
+  onCopyRich: CopyHandler
+  onCopyHTML: CopyHandler
+  onExportHTML: ActionHandler
+  onGeneratePoster: ActionHandler
   darkMode: boolean
-  onToggleDark: () => void
+  onToggleDark: ActionHandler
 }
 
 export default function Header({
@@ -48,13 +51,24 @@ export default function Header({
   onToggleDark,
 }: HeaderProps) {
   const [copiedType, setCopiedType] = useState<string | null>(null)
+  const [copyingType, setCopyingType] = useState<string | null>(null)
   const wordCount = countWords(markdown)
   const readTime = estimateReadingTime(wordCount)
 
-  const handleCopy = (type: string, fn: () => void) => {
-    fn()
-    setCopiedType(type)
-    setTimeout(() => setCopiedType(null), 2000)
+  const handleCopy = async (type: string, fn: CopyHandler) => {
+    setCopyingType(type)
+    try {
+      const copied = await fn()
+      if (copied) {
+        setCopiedType(type)
+        setTimeout(() => setCopiedType(null), 2000)
+        return
+      }
+
+      setCopiedType(null)
+    } finally {
+      setCopyingType(null)
+    }
   }
 
   return (
@@ -62,7 +76,6 @@ export default function Header({
       className="h-[var(--header-height)] bg-white border-b border-gray-200 flex items-center justify-between px-4 flex-shrink-0"
       style={{ zIndex: 100 }}
     >
-      {/* Left section */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
@@ -83,7 +96,6 @@ export default function Header({
           <span className="text-xs text-gray-600 font-medium">{template.name}</span>
         </div>
 
-        {/* Stats */}
         <div className="hidden lg:flex items-center gap-3 ml-2 text-xs text-gray-400">
           <span className="flex items-center gap-1">
             <Type size={12} />
@@ -96,7 +108,6 @@ export default function Header({
         </div>
       </div>
 
-      {/* Center - View mode toggle */}
       <div className="hidden sm:flex items-center gap-1 bg-gray-100 rounded-lg p-1">
         {([
           { mode: 'mobile' as ViewMode, icon: Smartphone, label: '手机' },
@@ -118,12 +129,11 @@ export default function Header({
         ))}
       </div>
 
-      {/* Right section */}
       <div className="flex items-center gap-1">
-        {/* Copy rich text */}
         <button
-          onClick={() => handleCopy('rich', onCopyRich)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          onClick={() => void handleCopy('rich', onCopyRich)}
+          disabled={copyingType === 'rich'}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-60 ${
             copiedType === 'rich'
               ? 'bg-green-50 text-green-600'
               : 'hover:bg-gray-100 text-gray-600'
@@ -134,10 +144,10 @@ export default function Header({
           <span className="hidden sm:inline">{copiedType === 'rich' ? '已复制' : '复制排版'}</span>
         </button>
 
-        {/* Copy HTML source */}
         <button
-          onClick={() => handleCopy('html', onCopyHTML)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          onClick={() => void handleCopy('html', onCopyHTML)}
+          disabled={copyingType === 'html'}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-60 ${
             copiedType === 'html'
               ? 'bg-green-50 text-green-600'
               : 'hover:bg-gray-100 text-gray-600'
@@ -148,9 +158,8 @@ export default function Header({
           <span className="hidden md:inline">{copiedType === 'html' ? '已复制' : 'HTML'}</span>
         </button>
 
-        {/* Export HTML file */}
         <button
-          onClick={onExportHTML}
+          onClick={() => void onExportHTML()}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-100 text-gray-600 transition-all"
           title="导出HTML文件"
         >
@@ -158,9 +167,8 @@ export default function Header({
           <span className="hidden md:inline">导出</span>
         </button>
 
-        {/* Generate poster */}
         <button
-          onClick={onGeneratePoster}
+          onClick={() => void onGeneratePoster()}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all"
           title="生成海报"
         >
@@ -168,12 +176,10 @@ export default function Header({
           <span className="hidden sm:inline">海报</span>
         </button>
 
-        {/* Divider */}
         <div className="w-px h-5 bg-gray-200 mx-1" />
 
-        {/* Dark mode toggle */}
         <button
-          onClick={onToggleDark}
+          onClick={() => void onToggleDark()}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500"
           title={darkMode ? '浅色模式' : '深色模式'}
         >

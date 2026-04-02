@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import Header from './components/Header/Header'
 import Sidebar from './components/Sidebar/Sidebar'
 import Editor from './components/Editor/Editor'
@@ -16,9 +16,17 @@ import {
 } from './utils/renderer'
 
 type ViewMode = 'mobile' | 'tablet' | 'desktop'
+type ToastType = 'success' | 'error'
 
-// Toast notification
-function Toast({ message, onClose }: { message: string; onClose: () => void }) {
+function Toast({
+  message,
+  type,
+  onClose,
+}: {
+  message: string
+  type: ToastType
+  onClose: () => void
+}) {
   useEffect(() => {
     const timer = setTimeout(onClose, 2500)
     return () => clearTimeout(timer)
@@ -27,7 +35,9 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
   return (
     <div className="fixed top-20 right-4 z-[300] toast-enter">
       <div className="bg-gray-800 text-white px-4 py-2.5 rounded-lg shadow-lg text-sm flex items-center gap-2">
-        <span className="text-green-400">✓</span>
+        <span className={type === 'success' ? 'text-green-400' : 'text-red-400'}>
+          {type === 'success' ? '✓' : '✕'}
+        </span>
         {message}
       </div>
     </div>
@@ -35,7 +45,6 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
 }
 
 export default function App() {
-  // State
   const [markdown, setMarkdown] = useState(() => {
     const saved = localStorage.getItem('articlelayout_content')
     return saved || defaultMarkdown
@@ -48,9 +57,11 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [posterOpen, setPosterOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
-  const [toast, setToast] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null)
 
-  // Auto-save
+  const previewHTML = useMemo(() => parseMarkdown(markdown), [markdown])
+  const previewCSS = useMemo(() => generateTemplateCSS(template.styles), [template.styles])
+
   useEffect(() => {
     const timer = setTimeout(() => {
       localStorage.setItem('articlelayout_content', markdown)
@@ -62,38 +73,50 @@ export default function App() {
     localStorage.setItem('articlelayout_template', template.id)
   }, [template])
 
-  // Dark mode
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
   }, [darkMode])
 
-  const showToast = useCallback((msg: string) => {
-    setToast(msg)
+  const showToast = useCallback((message: string, type: ToastType = 'success') => {
+    setToast({ message, type })
   }, [])
 
-  // Copy rich text (for WeChat)
-  const handleCopyRich = useCallback(() => {
-    const html = parseMarkdown(markdown)
-    const css = generateTemplateCSS(template.styles)
-    copyRichHTML(
-      `<div class="article-preview template-${template.id}">${html}</div>`,
-      css
+  const handleCopyRich = useCallback(async () => {
+    const copied = await copyRichHTML(
+      `<div class="article-preview template-${template.id}">${previewHTML}</div>`,
+      previewCSS
     )
-    showToast('排版已复制，可直接粘贴到公众号编辑器')
-  }, [markdown, template, showToast])
 
-  // Copy HTML source
-  const handleCopyHTML = useCallback(() => {
-    const html = parseMarkdown(markdown)
-    const fullHTML = generateExportHTML(html, template.styles, extractTitle(markdown))
-    copyHTMLSource(fullHTML)
-    showToast('HTML 源码已复制到剪贴板')
-  }, [markdown, template, showToast])
+    if (copied) {
+      showToast('排版已复制，可直接粘贴到公众号编辑器', 'success')
+      return true
+    }
 
-  // Export HTML file
+    const failMessage = window.isSecureContext
+      ? '复制失败：当前浏览器限制了剪贴板权限，请改用“复制 HTML”'
+      : '复制失败：请在 HTTPS 环境中重试，或手动复制 HTML'
+    showToast(failMessage, 'error')
+    return false
+  }, [template.id, previewHTML, previewCSS, showToast])
+
+  const handleCopyHTML = useCallback(async () => {
+    const fullHTML = generateExportHTML(previewHTML, template.styles, extractTitle(markdown))
+    const copied = await copyHTMLSource(fullHTML)
+
+    if (copied) {
+      showToast('HTML 源码已复制到剪贴板', 'success')
+      return true
+    }
+
+    const failMessage = window.isSecureContext
+      ? '复制失败：当前浏览器限制了剪贴板权限'
+      : '复制失败：当前环境非 HTTPS，无法稳定访问系统剪贴板'
+    showToast(failMessage, 'error')
+    return false
+  }, [markdown, previewHTML, template.styles, showToast])
+
   const handleExportHTML = useCallback(() => {
-    const html = parseMarkdown(markdown)
-    const fullHTML = generateExportHTML(html, template.styles, extractTitle(markdown))
+    const fullHTML = generateExportHTML(previewHTML, template.styles, extractTitle(markdown))
     const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -101,12 +124,11 @@ export default function App() {
     a.download = `${extractTitle(markdown)}.html`
     a.click()
     URL.revokeObjectURL(url)
-    showToast('HTML 文件已下载')
-  }, [markdown, template, showToast])
+    showToast('HTML 文件已下载', 'success')
+  }, [markdown, previewHTML, template.styles, showToast])
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      {/* Header */}
       <Header
         template={template}
         markdown={markdown}
@@ -121,9 +143,7 @@ export default function App() {
         onToggleDark={() => setDarkMode(!darkMode)}
       />
 
-      {/* Main layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
         <Sidebar
           currentTemplate={template}
           onSelectTemplate={setTemplate}
@@ -131,25 +151,22 @@ export default function App() {
           onClose={() => setSidebarOpen(false)}
         />
 
-        {/* Editor + Preview split */}
         <div className="flex-1 flex overflow-hidden">
-          {/* Editor pane */}
           <div className="w-1/2 min-w-0 border-r border-gray-200">
             <Editor value={markdown} onChange={setMarkdown} />
           </div>
 
-          {/* Preview pane */}
           <div className="w-1/2 min-w-0">
             <Preview
-              markdown={markdown}
-              template={template}
+              html={previewHTML}
+              css={previewCSS}
+              templateId={template.id}
               viewMode={viewMode}
             />
           </div>
         </div>
       </div>
 
-      {/* Poster modal */}
       <PosterModal
         isOpen={posterOpen}
         onClose={() => setPosterOpen(false)}
@@ -157,8 +174,7 @@ export default function App() {
         template={template}
       />
 
-      {/* Toast */}
-      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   )
 }

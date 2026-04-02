@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react'
 import html2canvas from 'html2canvas'
 import type { Template } from '../../templates'
 import { extractTitle } from '../../utils/renderer'
-import { X, Download, Loader2, RefreshCw } from 'lucide-react'
+import { X, Download, Loader2 } from 'lucide-react'
 
 interface PosterModalProps {
   isOpen: boolean
