@@ -1,10 +1,9 @@
-import React, { useMemo } from 'react'
-import type { Template } from '../../templates'
-import { parseMarkdown, generateTemplateCSS } from '../../utils/renderer'
+import React from 'react'
 
 interface PreviewProps {
-  markdown: string
-  template: Template
+  html: string
+  css: string
+  templateId: string
   viewMode: 'mobile' | 'tablet' | 'desktop'
 }
 
@@ -14,10 +13,7 @@ const viewModeWidths = {
   desktop: '100%',
 }
 
-export default function Preview({ markdown, template, viewMode }: PreviewProps) {
-  const html = useMemo(() => parseMarkdown(markdown), [markdown])
-  const css = useMemo(() => generateTemplateCSS(template.styles), [template])
-
+export default function Preview({ html, css, templateId, viewMode }: PreviewProps) {
   const previewWidth = viewModeWidths[viewMode]
   const isMobileOrTablet = viewMode !== 'desktop'
 
@@ -34,21 +30,18 @@ export default function Preview({ markdown, template, viewMode }: PreviewProps) 
           minHeight: isMobileOrTablet ? '600px' : 'auto',
         }}
       >
-        {/* Mobile frame header */}
         {isMobileOrTablet && (
           <div className="bg-gray-800 px-4 py-2 flex items-center justify-center">
             <div className="w-20 h-1 bg-gray-600 rounded-full" />
           </div>
         )}
 
-        {/* Article content */}
         <style dangerouslySetInnerHTML={{ __html: css }} />
         <div
-          className={`article-preview template-${template.id} animate-fade-in`}
+          className={`article-preview template-${templateId} animate-fade-in`}
           dangerouslySetInnerHTML={{ __html: html }}
         />
 
-        {/* Mobile frame footer */}
         {isMobileOrTablet && (
           <div className="bg-gray-800 px-4 py-3 flex items-center justify-center">
             <div className="w-10 h-10 rounded-full border-2 border-gray-600" />

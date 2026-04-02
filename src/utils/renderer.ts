@@ -8,6 +8,14 @@ marked.setOptions({
   breaks: true,
 })
 
+function execCopyCommand(): boolean {
+  try {
+    return document.execCommand('copy')
+  } catch {
+    return false
+  }
+}
+
 /**
  * Parse Markdown to raw HTML
  */
@@ -209,7 +217,7 @@ export function generateTemplateCSS(styles: TemplateStyles): string {
  */
 export function generateExportHTML(html: string, styles: TemplateStyles, title: string): string {
   const css = generateTemplateCSS(styles)
-  
+
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -218,10 +226,10 @@ export function generateExportHTML(html: string, styles: TemplateStyles, title: 
   <title>${title}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      background: #f5f5f5; 
-      display: flex; 
-      justify-content: center; 
+    body {
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
       padding: 20px;
     }
     ${css}
@@ -247,33 +255,63 @@ export function extractTitle(markdown: string): string {
  * Copy rich HTML to clipboard (for pasting into WeChat editor)
  */
 export async function copyRichHTML(html: string, css: string): Promise<boolean> {
+  if (navigator.clipboard?.write && 'ClipboardItem' in window) {
+    try {
+      const plainText = new DOMParser().parseFromString(html, 'text/html').body.textContent || ''
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([plainText], { type: 'text/plain' }),
+        }),
+      ])
+      return true
+    } catch {
+      // fallback below
+    }
+  }
+
+  let container: HTMLDivElement | null = null
+  let styleEl: HTMLStyleElement | null = null
   try {
-    // Create a temporary element with styled content
-    const container = document.createElement('div')
+    container = document.createElement('div')
     container.innerHTML = html
-    
-    // Apply inline styles for WeChat compatibility
-    const styleEl = document.createElement('style')
+    container.setAttribute('aria-hidden', 'true')
+    container.style.position = 'fixed'
+    container.style.left = '-9999px'
+    container.style.top = '0'
+
+    styleEl = document.createElement('style')
     styleEl.textContent = css
+
     document.head.appendChild(styleEl)
     document.body.appendChild(container)
-    
-    // Select and copy
+
+    const selection = window.getSelection()
+    const previousRanges: Range[] = []
+    if (selection) {
+      for (let i = 0; i < selection.rangeCount; i++) {
+        previousRanges.push(selection.getRangeAt(i).cloneRange())
+      }
+    }
+
     const range = document.createRange()
     range.selectNodeContents(container)
-    const selection = window.getSelection()
     selection?.removeAllRanges()
     selection?.addRange(range)
-    document.execCommand('copy')
+    const copied = execCopyCommand()
+
     selection?.removeAllRanges()
-    
-    // Cleanup
-    document.body.removeChild(container)
-    document.head.removeChild(styleEl)
-    
-    return true
+    previousRanges.forEach(savedRange => selection?.addRange(savedRange))
+    return copied
   } catch {
     return false
+  } finally {
+    if (container?.parentNode) {
+      container.parentNode.removeChild(container)
+    }
+    if (styleEl?.parentNode) {
+      styleEl.parentNode.removeChild(styleEl)
+    }
   }
 }
 
@@ -281,18 +319,31 @@ export async function copyRichHTML(html: string, css: string): Promise<boolean> 
  * Copy plain HTML to clipboard
  */
 export async function copyHTMLSource(html: string): Promise<boolean> {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(html)
+      return true
+    } catch {
+      // fallback below
+    }
+  }
+
   try {
-    await navigator.clipboard.writeText(html)
-    return true
-  } catch {
-    // Fallback
     const textarea = document.createElement('textarea')
+    const activeElement = document.activeElement as HTMLElement | null
     textarea.value = html
+    textarea.setAttribute('readonly', 'true')
+    textarea.style.position = 'fixed'
+    textarea.style.left = '-9999px'
     document.body.appendChild(textarea)
     textarea.select()
-    document.execCommand('copy')
+    textarea.setSelectionRange(0, textarea.value.length)
+    const copied = execCopyCommand()
     document.body.removeChild(textarea)
-    return true
+    activeElement?.focus?.()
+    return copied
+  } catch {
+    return false
   }
 }
 
@@ -306,7 +357,7 @@ export function countWords(text: string): number {
     .replace(/[*_`~\[\]()]/g, '')
     .replace(/\n+/g, '')
     .trim()
-  
+
   // Chinese characters + English words
   const chineseChars = (plain.match(/[\u4e00-\u9fff]/g) || []).length
   const englishWords = (plain.match(/[a-zA-Z]+/g) || []).length
