@@ -60,6 +60,41 @@ Open: `http://localhost:5173`
 
 ---
 
+## ✅ Project health check (April 4, 2026)
+
+Validated locally:
+
+- TypeScript check passes: `npm run lint`
+- Production build passes: `npm run build`
+- `lint:eslint` currently fails because the repo does not include ESLint v9 `eslint.config.*`
+
+> Recommended next step: add ESLint v9 flat config to make CI checks fully green.
+
+---
+
+## 🚀 Growth playbook (to make this project spread faster)
+
+If you want this project to take off, focus on **time-to-first-success** and **shareable output**:
+
+1. Keep GIF demo, and add 3 before/after screenshots.
+2. Add copy-ready template packs (WeChat intro, tech tutorial, social card).
+3. Add export watermark toggle ("Made with PageSkill") for organic distribution.
+4. Publish one OpenClaw automation flow example.
+5. Ship one template + one real user case every week.
+
+---
+
+## 🧪 Common commands
+
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run preview
+```
+
+---
+
 ## 🎯 Use cases
 
 - WeChat article layout and publishing

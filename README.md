@@ -60,6 +60,48 @@ npm run dev
 
 ---
 
+## ✅ 项目可用性自检（2026-04-04）
+
+本地已验证：
+
+- TypeScript 类型检查可通过：`npm run lint`
+- 生产构建可通过：`npm run build`
+- `lint:eslint` 当前会失败（原因：仓库还未提供 ESLint v9 的 `eslint.config.*`）
+
+> 建议下一步：补齐 ESLint v9 flat config，保证 CI 一次性通过。
+
+---
+
+## 🚀 爆火增长玩法（开源项目实战版）
+
+想让项目“爆火”，核心不是只做功能，而是**降低首次成功成本 + 提高传播素材密度**：
+
+1. **首屏 10 秒打动人**：保留 GIF，但再加 3 张“前后对比图”（原始 Markdown vs 发布效果）。
+2. **给出可复制模板**：增加「公众号开场白模板」「技术长文模板」「小红书卡片模板」三个示例。
+3. **做分发钩子**：每次导出后提示“本排版由 PageSkill 生成（可关闭）”，形成自然扩散。
+4. **做 OpenClaw 场景案例**：放 1 个自动化流程图，告诉用户“输入主题 -> AI 生成 -> PageSkill 排版 -> 导出发布”。
+5. **发布节奏固定化**：每周发布 1 个模板 + 1 条使用案例，持续占领搜索。
+
+---
+
+## 🧪 常用命令
+
+```bash
+# 启动开发环境
+npm run dev
+
+# 类型检查
+npm run lint
+
+# 构建产物
+npm run build
+
+# 预览构建结果
+npm run preview
+```
+
+---
+
 ## 🎯 适用场景
 
 - 公众号文章排版与发布
@@ -101,6 +143,32 @@ PageSkill/
 ```
 
 ---
+
+
+## 🤖 OpenClaw 直接调度
+
+已支持通过 URL 参数和 `postMessage` 直接调度 PageSkill：
+
+- URL 参数：`?template=tech&view=mobile&dark=1&markdown=%23%20标题`
+- 消息协议：
+
+```js
+window.postMessage({
+  type: 'pageskill.command',
+  payload: { action: 'setMarkdown', markdown: '# OpenClaw 调度成功' }
+}, '*')
+```
+
+可用 action：`setMarkdown` / `setTemplate` / `setViewMode` / `toggleDark` / `copyRich` / `copyHTML` / `exportHTML` / `openPoster`。
+
+OpenClaw 直接调用（宿主页面）示例：
+
+```js
+await window.PageSkillOpenClaw.dispatch({
+  action: 'setTemplate',
+  templateId: 'tech'
+})
+```
 
 ## 🗺️ Roadmap
 
