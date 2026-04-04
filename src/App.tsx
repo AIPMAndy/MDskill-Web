@@ -14,9 +14,30 @@ import {
   copyRichHTML,
   copyHTMLSource,
 } from './utils/renderer'
+import {
+  parseOpenClawURLParams,
+  resolveTemplateById,
+  isOpenClawMessage,
+  postOpenClawAck,
+  type OpenClawCommand,
+  type ViewMode,
+} from './utils/openclaw'
 
-type ViewMode = 'mobile' | 'tablet' | 'desktop'
 type ToastType = 'success' | 'error'
+
+declare global {
+  interface Window {
+    PageSkillOpenClaw?: {
+      dispatch: (command: OpenClawCommand) => Promise<boolean>
+      getState: () => {
+        markdown: string
+        templateId: string
+        viewMode: ViewMode
+        darkMode: boolean
+      }
+    }
+  }
+}
 
 function Toast({
   message,
@@ -127,8 +148,113 @@ export default function App() {
     showToast('HTML 文件已下载', 'success')
   }, [markdown, previewHTML, template.styles, showToast])
 
+  const dispatchOpenClawCommand = useCallback(async (command: OpenClawCommand): Promise<boolean> => {
+    switch (command.action) {
+      case 'setMarkdown':
+        if (typeof command.markdown === 'string') {
+          setMarkdown(command.markdown)
+          showToast('已接收 OpenClaw 内容调度', 'success')
+          return true
+        }
+        return false
+      case 'setTemplate': {
+        const resolved = resolveTemplateById(allTemplates, command.templateId)
+        if (resolved) {
+          setTemplate(resolved)
+          return true
+        }
+        return false
+      }
+      case 'setViewMode':
+        if (command.viewMode) {
+          setViewMode(command.viewMode)
+          return true
+        }
+        return false
+      case 'toggleDark':
+        if (typeof command.darkMode === 'boolean') {
+          setDarkMode(command.darkMode)
+        } else {
+          setDarkMode((prev) => !prev)
+        }
+        return true
+      case 'copyRich':
+        return handleCopyRich()
+      case 'copyHTML':
+        return handleCopyHTML()
+      case 'exportHTML':
+        handleExportHTML()
+        return true
+      case 'openPoster':
+        setPosterOpen(true)
+        return true
+      default:
+        return false
+    }
+  }, [handleCopyHTML, handleCopyRich, handleExportHTML, showToast])
+
+  useEffect(() => {
+    const { templateId, markdown: markdownByURL, viewMode: viewModeByURL, darkMode: darkModeByURL } =
+      parseOpenClawURLParams(window.location.href)
+
+    if (templateId) {
+      const resolved = resolveTemplateById(allTemplates, templateId)
+      if (resolved) {
+        setTemplate(resolved)
+      }
+    }
+
+    if (markdownByURL) {
+      setMarkdown(markdownByURL)
+      showToast('已从 OpenClaw URL 参数导入内容', 'success')
+    }
+
+    if (viewModeByURL && ['mobile', 'tablet', 'desktop'].includes(viewModeByURL)) {
+      setViewMode(viewModeByURL)
+    }
+
+    if (typeof darkModeByURL === 'boolean') {
+      setDarkMode(darkModeByURL)
+    }
+  }, [showToast])
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (!isOpenClawMessage(event.data)) {
+        return
+      }
+
+      const command = event.data.payload
+      if (!command) {
+        postOpenClawAck({ ok: false, action: 'setMarkdown', message: 'missing payload' })
+        return
+      }
+
+      void dispatchOpenClawCommand(command).then((ok) => {
+        postOpenClawAck({ ok, action: command.action, message: ok ? 'ok' : 'invalid command' })
+      })
+    }
+
+    window.addEventListener('message', onMessage)
+
+    window.PageSkillOpenClaw = {
+      dispatch: dispatchOpenClawCommand,
+      getState: () => ({
+        markdown,
+        templateId: template.id,
+        viewMode,
+        darkMode,
+      }),
+    }
+
+    return () => {
+      window.removeEventListener('message', onMessage)
+      delete window.PageSkillOpenClaw
+    }
+  }, [darkMode, dispatchOpenClawCommand, markdown, template.id, viewMode])
+
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="h-screen flex flex-col overflow-hidden app-shell">
       <Header
         template={template}
         markdown={markdown}
