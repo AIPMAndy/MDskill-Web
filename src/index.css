@@ -101,3 +101,14 @@ body {
 .toast-enter {
   animation: slideIn 0.3s ease-out;
 }
+
+.app-shell {
+  background: radial-gradient(circle at 0% 0%, #f8fafc 0%, #eef2ff 35%, #f8fafc 100%);
+}
+
+.preview-surface {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

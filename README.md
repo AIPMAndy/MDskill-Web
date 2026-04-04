@@ -102,6 +102,23 @@ PageSkill/
 
 ---
 
+
+## 🤖 OpenClaw 直接调度
+
+已支持通过 URL 参数和 `postMessage` 直接调度 PageSkill：
+
+- URL 参数：`?template=tech&view=mobile&dark=1&markdown=%23%20标题`
+- 消息协议：
+
+```js
+window.postMessage({
+  type: 'pageskill.command',
+  payload: { action: 'setMarkdown', markdown: '# OpenClaw 调度成功' }
+}, '*')
+```
+
+可用 action：`setMarkdown` / `setTemplate` / `setViewMode` / `toggleDark` / `copyRich` / `copyHTML` / `exportHTML` / `openPoster`。
+
 ## 🗺️ Roadmap
 
 - [x] Markdown 实时渲染
