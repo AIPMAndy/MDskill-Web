@@ -113,10 +113,7 @@ export default function App() {
       return true
     }
 
-    const failMessage = window.isSecureContext
-      ? '复制失败：当前浏览器限制了剪贴板权限，请改用“复制 HTML”'
-      : '复制失败：请在 HTTPS 环境中重试，或手动复制 HTML'
-    showToast(failMessage, 'error')
+    showToast('复制失败，请检查浏览器剪贴板权限后重试', 'error')
     return false
   }, [template.id, previewHTML, previewCSS, showToast])
 
@@ -129,10 +126,7 @@ export default function App() {
       return true
     }
 
-    const failMessage = window.isSecureContext
-      ? '复制失败：当前浏览器限制了剪贴板权限'
-      : '复制失败：当前环境非 HTTPS，无法稳定访问系统剪贴板'
-    showToast(failMessage, 'error')
+    showToast('HTML 复制失败，请检查浏览器剪贴板权限后重试', 'error')
     return false
   }, [markdown, previewHTML, template.styles, showToast])
 

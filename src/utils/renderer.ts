@@ -2,19 +2,65 @@ import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import type { TemplateStyles } from '../templates'
 
+const INLINE_STYLE_PROPERTIES = [
+  'background-color',
+  'color',
+  'font-family',
+  'font-size',
+  'font-style',
+  'font-weight',
+  'line-height',
+  'letter-spacing',
+  'text-align',
+  'text-decoration',
+  'text-indent',
+  'white-space',
+  'word-break',
+  'overflow-wrap',
+  'word-wrap',
+  'display',
+  'width',
+  'max-width',
+  'min-width',
+  'height',
+  'max-height',
+  'min-height',
+  'margin-top',
+  'margin-right',
+  'margin-bottom',
+  'margin-left',
+  'padding-top',
+  'padding-right',
+  'padding-bottom',
+  'padding-left',
+  'border-top-width',
+  'border-right-width',
+  'border-bottom-width',
+  'border-left-width',
+  'border-top-style',
+  'border-right-style',
+  'border-bottom-style',
+  'border-left-style',
+  'border-top-color',
+  'border-right-color',
+  'border-bottom-color',
+  'border-left-color',
+  'border-radius',
+  'box-shadow',
+  'list-style-type',
+  'list-style-position',
+  'border-collapse',
+  'border-spacing',
+  'caption-side',
+  'vertical-align',
+  'float',
+]
+
 // Configure marked
 marked.setOptions({
   gfm: true,
   breaks: true,
 })
-
-function execCopyCommand(): boolean {
-  try {
-    return document.execCommand('copy')
-  } catch {
-    return false
-  }
-}
 
 /**
  * Parse Markdown to raw HTML
@@ -217,7 +263,7 @@ export function generateTemplateCSS(styles: TemplateStyles): string {
  */
 export function generateExportHTML(html: string, styles: TemplateStyles, title: string): string {
   const css = generateTemplateCSS(styles)
-
+  
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -226,10 +272,10 @@ export function generateExportHTML(html: string, styles: TemplateStyles, title: 
   <title>${title}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #f5f5f5;
-      display: flex;
-      justify-content: center;
+    body { 
+      background: #f5f5f5; 
+      display: flex; 
+      justify-content: center; 
       padding: 20px;
     }
     ${css}
@@ -251,13 +297,88 @@ export function extractTitle(markdown: string): string {
   return match ? match[1].trim() : '未命名文章'
 }
 
-/**
- * Copy rich HTML to clipboard (for pasting into WeChat editor)
- */
-export async function copyRichHTML(html: string, css: string): Promise<boolean> {
-  if (navigator.clipboard?.write && 'ClipboardItem' in window) {
+function inlineComputedStyles(root: HTMLElement) {
+  const elements = [root, ...Array.from(root.querySelectorAll<HTMLElement>('*'))]
+
+  elements.forEach((element) => {
+    const computedStyles = window.getComputedStyle(element)
+
+    INLINE_STYLE_PROPERTIES.forEach((property) => {
+      const value = computedStyles.getPropertyValue(property)
+
+      if (value) {
+        element.style.setProperty(property, value)
+      }
+    })
+  })
+}
+
+function applyMagazineDropCap(root: HTMLElement) {
+  if (!root.classList.contains('template-magazine')) {
+    return
+  }
+
+  const firstParagraph = Array.from(root.children).find(
+    (node): node is HTMLParagraphElement => node instanceof HTMLParagraphElement
+  )
+
+  if (!firstParagraph) {
+    return
+  }
+
+  const walker = document.createTreeWalker(firstParagraph, NodeFilter.SHOW_TEXT)
+  let firstTextNode: Text | null = null
+
+  while (walker.nextNode()) {
+    const current = walker.currentNode as Text
+    if (current.textContent?.trim()) {
+      firstTextNode = current
+      break
+    }
+  }
+
+  if (!firstTextNode?.textContent) {
+    return
+  }
+
+  const firstLetterIndex = firstTextNode.textContent.search(/\S/u)
+  if (firstLetterIndex === -1) {
+    return
+  }
+
+  const fullText = firstTextNode.textContent
+  const prefix = fullText.slice(0, firstLetterIndex)
+  const firstLetter = fullText[firstLetterIndex]
+  const suffix = fullText.slice(firstLetterIndex + 1)
+  const fragment = document.createDocumentFragment()
+
+  if (prefix) {
+    fragment.appendChild(document.createTextNode(prefix))
+  }
+
+  const dropCap = document.createElement('span')
+  dropCap.textContent = firstLetter
+  dropCap.style.cssText = [
+    'float: left',
+    'font-size: 3.2em',
+    'font-weight: 700',
+    'line-height: 1',
+    'margin-right: 8px',
+    'margin-top: 4px',
+    'color: #dc2626',
+  ].join('; ')
+  fragment.appendChild(dropCap)
+
+  if (suffix) {
+    fragment.appendChild(document.createTextNode(suffix))
+  }
+
+  firstTextNode.replaceWith(fragment)
+}
+
+async function writeHTMLToClipboard(html: string, plainText: string): Promise<boolean> {
+  if (navigator.clipboard?.write && typeof ClipboardItem !== 'undefined') {
     try {
-      const plainText = new DOMParser().parseFromString(html, 'text/html').body.textContent || ''
       await navigator.clipboard.write([
         new ClipboardItem({
           'text/html': new Blob([html], { type: 'text/html' }),
@@ -266,52 +387,65 @@ export async function copyRichHTML(html: string, css: string): Promise<boolean> 
       ])
       return true
     } catch {
-      // fallback below
+      // Fall back to execCommand for environments where clipboard.write is blocked.
     }
   }
 
-  let container: HTMLDivElement | null = null
-  let styleEl: HTMLStyleElement | null = null
+  let copied = false
+  const handleCopy = (event: ClipboardEvent) => {
+    event.preventDefault()
+    event.clipboardData?.setData('text/html', html)
+    event.clipboardData?.setData('text/plain', plainText)
+    copied = true
+  }
+
+  document.addEventListener('copy', handleCopy)
   try {
-    container = document.createElement('div')
-    container.innerHTML = html
-    container.setAttribute('aria-hidden', 'true')
-    container.style.position = 'fixed'
-    container.style.left = '-9999px'
-    container.style.top = '0'
+    copied = document.execCommand('copy') || copied
+    return copied
+  } finally {
+    document.removeEventListener('copy', handleCopy)
+  }
+}
 
-    styleEl = document.createElement('style')
+/**
+ * Copy rich HTML to clipboard (for pasting into WeChat editor)
+ */
+export async function copyRichHTML(html: string, css: string): Promise<boolean> {
+  let sandbox: HTMLDivElement | null = null
+
+  try {
+    sandbox = document.createElement('div')
+    sandbox.style.position = 'fixed'
+    sandbox.style.left = '-99999px'
+    sandbox.style.top = '0'
+    sandbox.style.opacity = '0'
+    sandbox.style.pointerEvents = 'none'
+
+    const styleEl = document.createElement('style')
     styleEl.textContent = css
+    sandbox.appendChild(styleEl)
 
-    document.head.appendChild(styleEl)
-    document.body.appendChild(container)
+    const host = document.createElement('div')
+    host.innerHTML = html
+    sandbox.appendChild(host)
+    document.body.appendChild(sandbox)
 
-    const selection = window.getSelection()
-    const previousRanges: Range[] = []
-    if (selection) {
-      for (let i = 0; i < selection.rangeCount; i++) {
-        previousRanges.push(selection.getRangeAt(i).cloneRange())
-      }
+    const article = host.firstElementChild
+    if (!(article instanceof HTMLElement)) {
+      return false
     }
 
-    const range = document.createRange()
-    range.selectNodeContents(container)
-    selection?.removeAllRanges()
-    selection?.addRange(range)
-    const copied = execCopyCommand()
+    applyMagazineDropCap(article)
+    inlineComputedStyles(article)
 
-    selection?.removeAllRanges()
-    previousRanges.forEach(savedRange => selection?.addRange(savedRange))
-    return copied
+    const richHTML = article.outerHTML
+    const plainText = article.innerText
+    return await writeHTMLToClipboard(richHTML, plainText)
   } catch {
     return false
   } finally {
-    if (container?.parentNode) {
-      container.parentNode.removeChild(container)
-    }
-    if (styleEl?.parentNode) {
-      styleEl.parentNode.removeChild(styleEl)
-    }
+    sandbox?.remove()
   }
 }
 
@@ -319,31 +453,18 @@ export async function copyRichHTML(html: string, css: string): Promise<boolean> 
  * Copy plain HTML to clipboard
  */
 export async function copyHTMLSource(html: string): Promise<boolean> {
-  if (navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(html)
-      return true
-    } catch {
-      // fallback below
-    }
-  }
-
   try {
+    await navigator.clipboard.writeText(html)
+    return true
+  } catch {
+    // Fallback
     const textarea = document.createElement('textarea')
-    const activeElement = document.activeElement as HTMLElement | null
     textarea.value = html
-    textarea.setAttribute('readonly', 'true')
-    textarea.style.position = 'fixed'
-    textarea.style.left = '-9999px'
     document.body.appendChild(textarea)
     textarea.select()
-    textarea.setSelectionRange(0, textarea.value.length)
-    const copied = execCopyCommand()
+    const copied = document.execCommand('copy')
     document.body.removeChild(textarea)
-    activeElement?.focus?.()
     return copied
-  } catch {
-    return false
   }
 }
 
@@ -357,7 +478,7 @@ export function countWords(text: string): number {
     .replace(/[*_`~\[\]()]/g, '')
     .replace(/\n+/g, '')
     .trim()
-
+  
   // Chinese characters + English words
   const chineseChars = (plain.match(/[\u4e00-\u9fff]/g) || []).length
   const englishWords = (plain.match(/[a-zA-Z]+/g) || []).length
