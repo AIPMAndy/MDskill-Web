@@ -139,3 +139,27 @@ Apache-2.0
 **Made with ❤️ by [Andy | AI酋长](https://github.com/AIPMAndy)**
 
 </div>
+
+
+---
+
+## ✅ Project health check (April 4, 2026)
+
+Validated locally:
+
+- TypeScript check passes: `npm run lint`
+- Production build passes: `npm run build`
+- `lint:eslint` currently fails because the repo does not include ESLint v9 `eslint.config.*`
+
+> Recommended next step: add ESLint v9 flat config to make CI checks fully green.
+
+---
+
+## 🧪 Common commands
+
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run preview
+```

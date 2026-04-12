@@ -156,3 +156,34 @@ Apache-2.0
 **Made with ❤️ by [Andy | AI酋长](https://github.com/AIPMAndy)**
 
 </div>
+
+
+---
+
+## ✅ 项目可用性自检（2026-04-04）
+
+本地已验证：
+
+- TypeScript 类型检查可通过：`npm run lint`
+- 生产构建可通过：`npm run build`
+- `lint:eslint` 当前会失败（原因：仓库还未提供 ESLint v9 的 `eslint.config.*`）
+
+> 建议下一步：补齐 ESLint v9 flat config，保证 CI 一次性通过。
+
+---
+
+## 🧪 常用命令
+
+```bash
+# 启动开发环境
+npm run dev
+
+# 类型检查
+npm run lint
+
+# 构建产物
+npm run build
+
+# 预览构建结果
+npm run preview
+```
