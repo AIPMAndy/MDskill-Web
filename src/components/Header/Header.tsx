@@ -16,6 +16,7 @@ import {
   FileText,
   Clock,
   Type,
+  Sparkles,
 } from 'lucide-react'
 
 type ViewMode = 'mobile' | 'tablet' | 'desktop'
@@ -26,10 +27,11 @@ interface HeaderProps {
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
   onToggleSidebar: () => void
-  onCopyRich: () => void
-  onCopyHTML: () => void
+  onCopyRich: () => Promise<boolean>
+  onCopyHTML: () => Promise<boolean>
   onExportHTML: () => void
   onGeneratePoster: () => void
+  onOpenFeishuHelper: () => void
   darkMode: boolean
   onToggleDark: () => void
 }
@@ -44,6 +46,7 @@ export default function Header({
   onCopyHTML,
   onExportHTML,
   onGeneratePoster,
+  onOpenFeishuHelper,
   darkMode,
   onToggleDark,
 }: HeaderProps) {
@@ -51,8 +54,12 @@ export default function Header({
   const wordCount = countWords(markdown)
   const readTime = estimateReadingTime(wordCount)
 
-  const handleCopy = (type: string, fn: () => void) => {
-    fn()
+  const handleCopy = async (type: string, fn: () => Promise<boolean>) => {
+    const copied = await fn()
+    if (!copied) {
+      return
+    }
+
     setCopiedType(type)
     setTimeout(() => setCopiedType(null), 2000)
   }
@@ -166,6 +173,16 @@ export default function Header({
         >
           <Image size={14} />
           <span className="hidden sm:inline">海报</span>
+        </button>
+
+        {/* Feishu helper */}
+        <button
+          onClick={onOpenFeishuHelper}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 transition-all"
+          title="检查飞书文档编辑能力"
+        >
+          <Sparkles size={14} />
+          <span className="hidden sm:inline">飞书助手</span>
         </button>
 
         {/* Divider */}

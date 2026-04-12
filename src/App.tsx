@@ -72,23 +72,41 @@ export default function App() {
   }, [])
 
   // Copy rich text (for WeChat)
-  const handleCopyRich = useCallback(() => {
+  const handleCopyRich = useCallback(async () => {
     const html = parseMarkdown(markdown)
     const css = generateTemplateCSS(template.styles)
-    copyRichHTML(
+    const copied = await copyRichHTML(
       `<div class="article-preview template-${template.id}">${html}</div>`,
       css
     )
-    showToast('排版已复制，可直接粘贴到公众号编辑器')
+
+    if (copied) {
+      showToast('排版已复制，可直接粘贴到公众号编辑器')
+    } else {
+      showToast('复制失败，请检查浏览器剪贴板权限后重试')
+    }
+
+    return copied
   }, [markdown, template, showToast])
 
   // Copy HTML source
-  const handleCopyHTML = useCallback(() => {
+  const handleCopyHTML = useCallback(async () => {
     const html = parseMarkdown(markdown)
     const fullHTML = generateExportHTML(html, template.styles, extractTitle(markdown))
-    copyHTMLSource(fullHTML)
-    showToast('HTML 源码已复制到剪贴板')
+    const copied = await copyHTMLSource(fullHTML)
+
+    if (copied) {
+      showToast('HTML 源码已复制到剪贴板')
+    } else {
+      showToast('HTML 复制失败，请检查浏览器剪贴板权限后重试')
+    }
+
+    return copied
   }, [markdown, template, showToast])
+
+  const handleOpenFeishuHelper = useCallback(() => {
+    showToast('飞书直连能力尚未接入，当前仅支持手动复制排版内容')
+  }, [showToast])
 
   // Export HTML file
   const handleExportHTML = useCallback(() => {
@@ -117,6 +135,7 @@ export default function App() {
         onCopyHTML={handleCopyHTML}
         onExportHTML={handleExportHTML}
         onGeneratePoster={() => setPosterOpen(true)}
+        onOpenFeishuHelper={handleOpenFeishuHelper}
         darkMode={darkMode}
         onToggleDark={() => setDarkMode(!darkMode)}
       />
