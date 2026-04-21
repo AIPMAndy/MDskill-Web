@@ -49,6 +49,8 @@
 
 ## ⚡ 30 秒本地启动
 
+### Web 版本
+
 ```bash
 git clone https://github.com/AIPMAndy/PageSkill.git
 cd PageSkill
@@ -57,6 +59,24 @@ npm run dev
 ```
 
 访问：`http://localhost:5173`
+
+### 🆕 CLI 版本（命令行工具）
+
+```bash
+# 快速转换 Markdown 为 HTML
+node cli.js input.md --template modern --output output.html
+
+# 查看所有选项
+node cli.js
+```
+
+**适用场景**：
+- 自动化文档生成
+- 批量转换 Markdown 文件
+- OpenClaw Skill 集成
+- CI/CD 流程中使用
+
+📖 [查看 CLI 完整文档](CLI.md)
 
 ---
 
