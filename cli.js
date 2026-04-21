@@ -9,11 +9,38 @@ import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
 
+// 微信公众号内联样式配置
+const wechatStyles = {
+  body: 'font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif; font-size: 17px; line-height: 1.6; color: #3e3e3e; padding: 20px 16px;',
+  h1: 'font-size: 24px; font-weight: bold; color: #2c2c2c; margin: 20px 0 10px 0; line-height: 1.4;',
+  h2: 'font-size: 20px; font-weight: bold; color: #2c2c2c; margin: 18px 0 10px 0; padding-bottom: 8px; border-bottom: 2px solid #3e7bff; line-height: 1.4;',
+  h3: 'font-size: 18px; font-weight: bold; color: #2c2c2c; margin: 16px 0 8px 0; line-height: 1.4;',
+  p: 'margin: 10px 0; font-size: 16px; line-height: 1.8; color: #3e3e3e; text-align: justify;',
+  ul: 'margin: 10px 0; padding-left: 20px;',
+  ol: 'margin: 10px 0; padding-left: 20px;',
+  li: 'margin: 8px 0; font-size: 16px; line-height: 1.8; color: #3e3e3e;',
+  strong: 'font-weight: bold; color: #3e7bff;',
+  em: 'font-style: italic; color: #666;',
+  blockquote: 'margin: 15px 0; padding: 10px 15px; background-color: #f7f7f7; border-left: 4px solid #3e7bff; color: #666; font-style: italic;',
+  code: 'font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px; background-color: #f5f5f5; padding: 2px 6px; border-radius: 3px; color: #e74c3c;',
+  pre: 'margin: 15px 0; padding: 15px; background-color: #2c2c2c; border-radius: 5px; overflow-x: auto; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px; line-height: 1.6; color: #f8f8f2;',
+  hr: 'margin: 20px 0; border: none; border-top: 1px solid #e0e0e0;',
+  a: 'color: #3e7bff; text-decoration: none;',
+  img: 'max-width: 100%; height: auto; display: block; margin: 15px auto;'
+};
+
 // 简单的模板系统
 const templates = {
+  wechat: {
+    id: 'wechat',
+    name: '微信公众号',
+    description: '完全内联样式，适配微信公众号编辑器',
+    inline: true
+  },
   modern: {
     id: 'modern',
     name: '现代风格',
+    description: '渐变紫色背景，卡片式布局',
     css: `
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
@@ -110,6 +137,7 @@ const templates = {
   minimal: {
     id: 'minimal',
     name: '极简风格',
+    description: '纯白背景，衬线字体',
     css: `
       body {
         font-family: 'Georgia', serif;
@@ -155,6 +183,7 @@ const templates = {
   tech: {
     id: 'tech',
     name: '技术风格',
+    description: '深色主题，等宽字体',
     css: `
       body {
         font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
@@ -253,8 +282,75 @@ const templates = {
   }
 };
 
+// 生成微信公众号内联样式 HTML
+function generateWechatHTML(markdown) {
+  const renderer = new marked.Renderer();
+  
+  renderer.heading = function(text, level) {
+    const style = wechatStyles[`h${level}`] || wechatStyles.h3;
+    return `<h${level} style="${style}">${text}</h${level}>\n`;
+  };
+  
+  renderer.paragraph = function(text) {
+    return `<p style="${wechatStyles.p}">${text}</p>\n`;
+  };
+  
+  renderer.list = function(body, ordered) {
+    const tag = ordered ? 'ol' : 'ul';
+    const style = wechatStyles[tag];
+    return `<${tag} style="${style}">\n${body}</${tag}>\n`;
+  };
+  
+  renderer.listitem = function(text) {
+    return `<li style="${wechatStyles.li}">${text}</li>\n`;
+  };
+  
+  renderer.strong = function(text) {
+    return `<strong style="${wechatStyles.strong}">${text}</strong>`;
+  };
+  
+  renderer.em = function(text) {
+    return `<em style="${wechatStyles.em}">${text}</em>`;
+  };
+  
+  renderer.blockquote = function(quote) {
+    return `<blockquote style="${wechatStyles.blockquote}">${quote}</blockquote>\n`;
+  };
+  
+  renderer.codespan = function(code) {
+    return `<code style="${wechatStyles.code}">${code}</code>`;
+  };
+  
+  renderer.code = function(code, language) {
+    return `<pre style="${wechatStyles.pre}"><code>${code}</code></pre>\n`;
+  };
+  
+  renderer.hr = function() {
+    return `<hr style="${wechatStyles.hr}">\n`;
+  };
+  
+  renderer.link = function(href, title, text) {
+    return `<a href="${href}" style="${wechatStyles.a}"${title ? ` title="${title}"` : ''}>${text}</a>`;
+  };
+  
+  renderer.image = function(href, title, text) {
+    return `<img src="${href}" alt="${text}" style="${wechatStyles.img}"${title ? ` title="${title}"` : ''}>\n`;
+  };
+  
+  marked.setOptions({ renderer });
+  const html = marked.parse(markdown);
+  
+  return `<section style="${wechatStyles.body}">\n${html}</section>`;
+}
+
+// 生成普通模板 HTML
 function generateHTML(markdown, templateId = 'modern') {
   const template = templates[templateId] || templates.modern;
+  
+  if (template.inline) {
+    return generateWechatHTML(markdown);
+  }
+  
   const html = marked.parse(markdown);
   
   return `<!DOCTYPE html>
@@ -291,12 +387,18 @@ function main() {
     console.log('  node cli.js <markdown-file> [options]');
     console.log('');
     console.log('选项:');
-    console.log('  --template <name>    选择模板 (modern|minimal|tech)，默认: modern');
+    console.log('  --template <name>    选择模板，默认: modern');
     console.log('  --output <file>      输出文件路径，默认: 输出到标准输出');
     console.log('');
+    console.log('可用模板:');
+    Object.values(templates).forEach(t => {
+      console.log(`  ${t.id.padEnd(10)} - ${t.name} (${t.description})`);
+    });
+    console.log('');
     console.log('示例:');
-    console.log('  node cli.js README.md --template modern --output output.html');
-    console.log('  node cli.js article.md --template tech > result.html');
+    console.log('  node cli.js README.md --template wechat --output wechat.html');
+    console.log('  node cli.js article.md --template modern --output output.html');
+    console.log('  node cli.js tech.md --template tech > result.html');
     process.exit(0);
   }
   
@@ -337,6 +439,9 @@ function main() {
     console.log(`✅ 已生成: ${outputFile}`);
     console.log(`📝 模板: ${templates[templateId].name}`);
     console.log(`📊 大小: ${(html.length / 1024).toFixed(2)} KB`);
+    if (templateId === 'wechat') {
+      console.log('💡 提示: 微信公众号模式，可直接复制粘贴到公众号编辑器');
+    }
   } else {
     console.log(html);
   }
