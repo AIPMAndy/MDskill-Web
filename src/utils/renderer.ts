@@ -191,9 +191,8 @@ export function generateTemplateCSS(styles: TemplateStyles): string {
       font-size: inherit;
     }
 
-    .article-preview img {
+    .article-preview p img {
       max-width: 100%;
-      width: 100%;
       height: auto;
       border-radius: ${styles.imageRadius};
       box-shadow: ${styles.imageShadow};
@@ -203,7 +202,12 @@ export function generateTemplateCSS(styles: TemplateStyles): string {
       margin-bottom: 20px;
       margin-left: auto;
       vertical-align: middle;
-      clear: both;
+    }
+
+    .article-preview p:has(img) {
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 0;
     }
 
     .article-preview ul, .article-preview ol {
