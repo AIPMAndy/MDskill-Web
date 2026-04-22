@@ -152,12 +152,12 @@ function generateWechatStyles(styles: TemplateStyles): WechatStyleMap {
 
     blockquote: `
       border-left: 4px solid ${styles.blockquoteBorderColor};
-      background-color: ${styles.blockquoteBg} !important;
+      background-color: ${styles.blockquoteBg === 'transparent' ? '#f5f5f5' : styles.blockquoteBg} !important;
       color: ${styles.blockquoteColor} !important;
       padding: 12px 18px;
       margin: 20px 0 !important;
-      border-radius: 0 6px 6px 0;
       line-height: 1.6 !important;
+      font-size: 16px;
       ${styles.blockquoteExtra || ''}
     `.trim().replace(/\s+/g, ' '),
 
