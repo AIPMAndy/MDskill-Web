@@ -193,11 +193,17 @@ export function generateTemplateCSS(styles: TemplateStyles): string {
 
     .article-preview img {
       max-width: 100%;
+      width: 100%;
       height: auto;
       border-radius: ${styles.imageRadius};
       box-shadow: ${styles.imageShadow};
       display: block;
-      margin: 20px auto;
+      margin-top: 20px;
+      margin-right: auto;
+      margin-bottom: 20px;
+      margin-left: auto;
+      vertical-align: middle;
+      clear: both;
     }
 
     .article-preview ul, .article-preview ol {
