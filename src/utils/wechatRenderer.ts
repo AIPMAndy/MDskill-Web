@@ -40,6 +40,20 @@ interface WechatStyleMap {
 }
 
 /**
+ * 移除微信不支持的 CSS 属性
+ */
+function sanitizeWechatCSS(css: string): string {
+  return css
+    .replace(/border-radius:\s*[^;]+;?/gi, '') // 移除 border-radius
+    .replace(/box-shadow:\s*[^;]+;?/gi, '')    // 移除 box-shadow
+    .replace(/text-shadow:\s*[^;]+;?/gi, '')   // 移除 text-shadow
+    .replace(/transform:\s*[^;]+;?/gi, '')     // 移除 transform
+    .replace(/transition:\s*[^;]+;?/gi, '')    // 移除 transition
+    .replace(/animation:\s*[^;]+;?/gi, '')     // 移除 animation
+    .trim()
+}
+
+/**
  * 将模板样式转换为微信安全的 inline style
  */
 function generateWechatStyles(styles: TemplateStyles): WechatStyleMap {
@@ -57,7 +71,7 @@ function generateWechatStyles(styles: TemplateStyles): WechatStyleMap {
       overflow-wrap: break-word;
     `.trim().replace(/\s+/g, ' '),
 
-    h1: `
+    h1: sanitizeWechatCSS(`
       font-family: ${styles.titleFont};
       font-size: ${styles.titleSize};
       font-weight: ${styles.titleWeight};
@@ -66,9 +80,9 @@ function generateWechatStyles(styles: TemplateStyles): WechatStyleMap {
       margin: 0 0 ${styles.titleMarginBottom} 0 !important;
       line-height: 1.35 !important;
       ${styles.titleExtra || ''}
-    `.trim().replace(/\s+/g, ' '),
+    `).trim().replace(/\s+/g, ' '),
 
-    h2: `
+    h2: sanitizeWechatCSS(`
       font-family: ${styles.h2Font};
       font-size: ${styles.h2Size};
       font-weight: ${styles.h2Weight};
@@ -76,16 +90,16 @@ function generateWechatStyles(styles: TemplateStyles): WechatStyleMap {
       margin: ${styles.h2MarginTop} 0 ${styles.h2MarginBottom} 0 !important;
       line-height: 1.4 !important;
       ${styles.h2Extra || ''}
-    `.trim().replace(/\s+/g, ' '),
+    `).trim().replace(/\s+/g, ' '),
 
-    h3: `
+    h3: sanitizeWechatCSS(`
       font-size: ${styles.h3Size};
       font-weight: ${styles.h3Weight};
       color: ${styles.h3Color} !important;
       margin: 24px 0 12px 0 !important;
       line-height: 1.4 !important;
       ${styles.h3Extra || ''}
-    `.trim().replace(/\s+/g, ' '),
+    `).trim().replace(/\s+/g, ' '),
 
     h4: `
       font-size: 18px;
