@@ -40,7 +40,7 @@ interface WechatStyleMap {
 }
 
 /**
- * 移除微信不支持的 CSS 属性
+ * 移除微信不支持的 CSS 属性，并给关键属性加上 !important
  */
 function sanitizeWechatCSS(css: string): string {
   return css
@@ -50,6 +50,11 @@ function sanitizeWechatCSS(css: string): string {
     .replace(/transform:\s*[^;]+;?/gi, '')     // 移除 transform
     .replace(/transition:\s*[^;]+;?/gi, '')    // 移除 transition
     .replace(/animation:\s*[^;]+;?/gi, '')     // 移除 animation
+    // 给关键属性加上 !important（如果还没有）
+    .replace(/background-color:\s*([^;!]+);/gi, 'background-color: $1 !important;')
+    .replace(/padding:\s*([^;!]+);/gi, 'padding: $1 !important;')
+    .replace(/border-left:\s*([^;!]+);/gi, 'border-left: $1 !important;')
+    .replace(/border-bottom:\s*([^;!]+);/gi, 'border-bottom: $1 !important;')
     .trim()
 }
 
