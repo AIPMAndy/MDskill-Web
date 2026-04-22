@@ -11,9 +11,9 @@ import {
   generateTemplateCSS,
   generateExportHTML,
   extractTitle,
-  copyRichHTML,
   copyHTMLSource,
 } from './utils/renderer'
+import { copyWechatHTML } from './utils/wechatRenderer'
 import {
   parseOpenClawURLParams,
   resolveTemplateById,
@@ -103,10 +103,7 @@ export default function App() {
   }, [])
 
   const handleCopyRich = useCallback(async () => {
-    const copied = await copyRichHTML(
-      `<div class="article-preview template-${template.id}">${previewHTML}</div>`,
-      previewCSS
-    )
+    const copied = await copyWechatHTML(markdown, template.styles)
 
     if (copied) {
       showToast('排版已复制，可直接粘贴到公众号编辑器', 'success')
@@ -115,7 +112,7 @@ export default function App() {
 
     showToast('复制失败，请检查浏览器剪贴板权限后重试', 'error')
     return false
-  }, [template.id, previewHTML, previewCSS, showToast])
+  }, [markdown, template.styles, showToast])
 
   const handleCopyHTML = useCallback(async () => {
     const fullHTML = generateExportHTML(previewHTML, template.styles, extractTitle(markdown))
