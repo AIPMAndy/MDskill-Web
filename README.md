@@ -2,6 +2,17 @@
 
 一个简洁的 Markdown 实时排版工具，支持多种主题模板和一键导出。
 
+## 📸 产品截图
+
+### 主界面
+![PageSkill 主界面](./assets/hero-screenshot.png)
+
+### 主题切换
+![主题切换演示](./assets/theme-switch.png)
+
+### 导出功能
+![导出功能](./assets/export-demo.png)
+
 ## 特性
 
 - 🎨 **多种主题模板** - 现代风格、极简风格、技术风格、微信公众号
