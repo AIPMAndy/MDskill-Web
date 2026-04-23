@@ -58,6 +58,8 @@ function sanitizeWechatCSS(css: string): string {
     .replace(/border-radius:\s*([^;!]+);?/gi, 'border-radius: $1 !important;') // 保留并加 !important
     // 添加 position: relative（参考 huasheng_editor）
     .replace(/$/gi, ' position: relative !important;')
+    // 将双引号替换为单引号，避免破坏 HTML 属性
+    .replace(/"/g, "'")
     .trim()
 }
 
@@ -261,6 +263,10 @@ function createWechatRenderer(styleMap: WechatStyleMap) {
   renderer.heading = (text, level) => {
     const tag = `h${level}`
     const style = styleMap[tag as keyof WechatStyleMap] || styleMap.h3
+    // 微信编辑器会过滤 h2 标签的背景色，用 section 标签替代
+    if (level === 2) {
+      return `<section style="${style}">${text}</section>`
+    }
     return `<${tag} style="${style}">${text}</${tag}>`
   }
 
