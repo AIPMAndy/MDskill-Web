@@ -41,17 +41,27 @@ interface WechatStyleMap {
 
 /**
  * 移除微信不支持的 CSS 属性，并给关键属性加上 !important
+ * @param css - CSS 字符串
+ * @param removeBackground - 是否移除 background-color（用于 h2Extra 避免覆盖用户自定义背景）
  */
-function sanitizeWechatCSS(css: string): string {
-  return css
+function sanitizeWechatCSS(css: string, removeBackground = false): string {
+  let result = css
     .replace(/border-radius:\s*[^;]+;?/gi, '') // 移除 border-radius
     .replace(/box-shadow:\s*[^;]+;?/gi, '')    // 移除 box-shadow
     .replace(/text-shadow:\s*[^;]+;?/gi, '')   // 移除 text-shadow
     .replace(/transform:\s*[^;]+;?/gi, '')     // 移除 transform
     .replace(/transition:\s*[^;]+;?/gi, '')    // 移除 transition
     .replace(/animation:\s*[^;]+;?/gi, '')     // 移除 animation
+
+  // 如果需要移除背景色（避免 h2Extra 覆盖用户自定义样式）
+  if (removeBackground) {
+    result = result.replace(/background-color:\s*[^;]+;?/gi, '')
+  } else {
     // 给关键属性加上 !important（如果还没有），分号可选
-    .replace(/background-color:\s*([^;!]+);?/gi, 'background-color: $1 !important;')
+    result = result.replace(/background-color:\s*([^;!]+);?/gi, 'background-color: $1 !important;')
+  }
+
+  return result
     .replace(/padding:\s*([^;!]+);?/gi, 'padding: $1 !important;')
     .replace(/border-left:\s*([^;!]+);?/gi, 'border-left: $1 !important;')
     .replace(/border-bottom:\s*([^;!]+);?/gi, 'border-bottom: $1 !important;')
@@ -97,7 +107,7 @@ function generateWechatStyles(styles: TemplateStyles): WechatStyleMap {
       margin: ${styles.h2MarginTop} 0 ${styles.h2MarginBottom} 0 !important;
       line-height: 1.4 !important;
       ${styles.h2Extra || ''}
-    `).trim().replace(/\s+/g, ' '),
+    `, true).trim().replace(/\s+/g, ' '),
 
     h3: sanitizeWechatCSS(`
       font-size: ${styles.h3Size};
