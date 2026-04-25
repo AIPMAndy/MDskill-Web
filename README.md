@@ -137,13 +137,19 @@ done
    node cli.js article.md --template wechat --output wechat.html
    ```
 
-2. **在浏览器中打开**
+2. **启动本地服务器查看**
    ```bash
-   open wechat.html  # macOS
-   # 或直接双击 wechat.html
+   # 方式一：使用 Python（macOS/Linux 自带）
+   python3 -m http.server 8000
+   # 然后访问 http://localhost:8000/wechat.html
+   
+   # 方式二：使用 npx（需要 Node.js）
+   npx serve .
+   # 然后访问显示的地址
    ```
 
 3. **全选复制**
+   - 在浏览器中打开生成的页面
    - 按 `Cmd+A`（macOS）或 `Ctrl+A`（Windows）全选
    - 按 `Cmd+C`（macOS）或 `Ctrl+C`（Windows）复制
 
