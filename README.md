@@ -4,14 +4,8 @@
 
 ## 📸 产品截图
 
-### 主界面
-![PageSkill 主界面](./assets/hero-screenshot.png)
+<img width="1462" height="798" alt="截屏2026-04-25 08 44 00" src="https://github.com/user-attachments/assets/abd2d6b0-0964-4680-8176-f07cc005ed9e" />
 
-### 主题切换
-![主题切换演示](./assets/theme-switch.png)
-
-### 导出功能
-![导出功能](./assets/export-demo.png)
 
 ## 特性
 
