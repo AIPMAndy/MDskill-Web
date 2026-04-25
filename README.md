@@ -18,9 +18,24 @@
 
 ## 在线使用
 
-直接在浏览器中打开 `index.html` 即可使用。
+### 方式一：开发模式（推荐）
 
-## 命令行使用
+```bash
+npm install
+npm run dev
+# 访问 http://localhost:3000
+```
+
+### 方式二：生产构建
+
+```bash
+npm install
+npm run build
+# 使用任意 HTTP 服务器打开 dist/ 目录
+# 例如：python3 -m http.server 8000 --directory dist
+```
+
+## 命令行使用（无需启动服务器）
 
 ### 安装依赖
 
