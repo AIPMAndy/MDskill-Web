@@ -180,22 +180,16 @@ done
 
 ## OpenClaw 调度
 
-可以通过 OpenClaw 直接调用 PageSkill：
+目前 PageSkill 不支持直接的 OpenClaw 调度。
 
-```javascript
-// 在 OpenClaw 中调用
-window.open('file:///path/to/PageSkill/index.html?markdown=' + encodeURIComponent(markdownText));
-```
+**推荐使用方式：**
 
-或使用 postMessage：
+1. **CLI 工具**：通过 `node cli.js` 生成 HTML 文件
+2. **本地服务器**：启动 `npm run dev` 后在浏览器中使用
 
-```javascript
-const iframe = document.querySelector('iframe');
-iframe.contentWindow.postMessage({
-  type: 'loadMarkdown',
-  markdown: markdownText
-}, '*');
-```
+**未来计划**：
+- 支持 URL 参数传入 Markdown
+- 支持 postMessage API 调用
 
 ## 技术栈
 
