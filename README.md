@@ -1,13 +1,18 @@
-# PageSkill
+# MDskill-Web
 
-一个简洁的 Markdown 实时排版工具，支持多种主题模板和一键导出。
+> 🌐 **MDskill 品牌的 Web 端** - 精美的 Markdown 在线排版工具
+
+**MDskill 产品矩阵：**
+- 🖥️ [**MDskill (Mac)**](https://github.com/AIPMAndy/MDskill) - Apple Silicon 原生 Markdown 编辑器（开发中）
+- 🌐 **MDskill-Web** - 在线排版工具（本项目）
+
+---
 
 ## 📸 产品截图
 
 <img width="1462" height="798" alt="截屏2026-04-25 08 44 00" src="https://github.com/user-attachments/assets/abd2d6b0-0964-4680-8176-f07cc005ed9e" />
 
-
-## 特性
+## ✨ 特性
 
 - 🎨 **13 种主题模板** - 覆盖商务、创意、技术、极简、故事 5 大场景
 - 📱 **微信公众号适配** - 完全内联样式，直接复制粘贴到公众号编辑器
@@ -16,280 +21,95 @@
 - 🔧 **命令行工具** - 支持批量处理和自动化
 - 🌐 **OpenClaw 调度** - 可通过 OpenClaw 直接调用
 
-## 在线使用
+## 🚀 快速开始
 
-### 方式一：开发模式（推荐）
+### 在线使用
+
+#### 方式一：开发模式（推荐）
 
 ```bash
 npm install
 npm run dev
-# 访问 http://localhost:3000
+# 访问 http://localhost:5173
 ```
 
-### 方式二：生产构建
+#### 方式二：生产构建
 
 ```bash
 npm install
 npm run build
 # 使用任意 HTTP 服务器打开 dist/ 目录
-# 例如：python3 -m http.server 8000 --directory dist
 ```
 
-## 命令行使用（无需启动服务器）
-
-### 安装依赖
+### 命令行使用
 
 ```bash
 npm install
-```
-
-### 基本用法
-
-```bash
 node cli.js <markdown-file> [options]
 ```
 
-### 选项
+## 💻 想要更强大的编辑体验？
 
-- `--template <name>` - 选择模板（wechat/modern/minimal/tech），默认: modern
-- `--output <file>` - 输出文件路径，默认: 输出到标准输出
+**试试 MDskill Mac 版！**
 
-### 可用模板
+🖥️ [**MDskill (Mac)**](https://github.com/AIPMAndy/MDskill) - Apple Silicon 原生 Markdown 编辑器
 
-#### 商务类（4 套）
-| 模板 ID | 名称 | 描述 | 适用场景 |
-|---------|------|------|----------|
-| `business` | 商务风格 | 专业商务排版，适合企业内容 | 企业报告、商业计划 |
-| `financial` | 金融风格 | 金融行业专业排版 | 财报分析、投资报告 |
-| `magazine` | 杂志风格 | 杂志式排版，视觉冲击力强 | 品牌故事、深度报道 |
-| `nyt` | 纽约时报 | 经典报刊排版 | 新闻报道、时事评论 |
+**为什么选择 Mac 版：**
+- ⚡️ **极致性能** - 原生 Swift 开发，启动 < 1秒，内存 < 100MB
+- 🎨 **精美设计** - 专为 macOS 设计的现代界面
+- 🇨🇳 **中文优化** - 完美的中英混排、标点挤压、字体回退
+- 🔄 **无缝同步** - 与 MDskill-Web 数据互通（开发中）
+- 📦 **本地优先** - 数据完全掌控，支持 iCloud 同步
 
-#### 创意类（3 套）
-| 模板 ID | 名称 | 描述 | 适用场景 |
-|---------|------|------|----------|
-| `literary` | 文学风格 | 优雅文学排版 | 散文、诗歌、文学评论 |
-| `elegant` | 优雅风格 | 精致优雅排版 | 生活方式、艺术鉴赏 |
-| `apple` | Apple 风格 | 简约现代，科技感 | 产品发布、设计分享 |
+**MDskill-Web vs MDskill Mac：**
+| 特性 | MDskill-Web | MDskill Mac |
+|------|-------------|-------------|
+| 平台 | 浏览器（全平台） | macOS 专属 |
+| 性能 | 中等 | 极致 |
+| 使用场景 | 快速排版、公众号发布 | 长时间写作、专业编辑 |
+| 价格 | 免费 | $19.99 |
 
-#### 技术类（2 套）
-| 模板 ID | 名称 | 描述 | 适用场景 |
-|---------|------|------|----------|
-| `tech` | 技术风格 | 深色主题，等宽字体 | 技术文档、代码教程 |
-| `anthropic` | Anthropic 风格 | AI 研究风格排版 | AI 论文、技术博客 |
+---
 
-#### 极简类（3 套）
-| 模板 ID | 名称 | 描述 | 适用场景 |
-|---------|------|------|----------|
-| `minimal` | 极简风格 | 纯白背景，衬线字体 | 学术文章、正式文档 |
-| `deepread` | 深度阅读 | 专注阅读体验 | 长文阅读、深度思考 |
-| `wechat` | 微信公众号 | 完全内联样式，适配微信公众号 | 公众号文章 |
+## 📄 完整文档
 
-#### 故事类（1 套）
-| 模板 ID | 名称 | 描述 | 适用场景 |
-|---------|------|------|----------|
-| `story` | 故事风格 | 叙事性强，沉浸式阅读 | 小说、故事、游记 |
-| `latepoint` | 深夜风格 | 深夜氛围，情感共鸣 | 情感文章、夜读专栏 |
+详细的模板列表、微信公众号使用指南、命令行工具说明，请查看：
+- [CLI 文档](./CLI.md)
+- [英文文档](./README_EN.md)
 
-### 示例
+## 🛠️ 技术栈
 
-#### 生成微信公众号格式
+- React 18 + TypeScript + Vite
+- Tailwind CSS
+- marked (Markdown 解析)
+- html2canvas (导出)
 
-```bash
-node cli.js article.md --template wechat --output wechat.html
-```
-
-生成的 HTML 可以直接在浏览器中打开，然后复制粘贴到微信公众号编辑器，样式完全保留。
-
-#### 生成现代风格
-
-```bash
-node cli.js README.md --template modern --output output.html
-```
-
-#### 使用管道输出
-
-```bash
-node cli.js tech.md --template tech > result.html
-```
-
-#### 批量处理
-
-```bash
-for file in *.md; do
-  node cli.js "$file" --template wechat --output "${file%.md}.html"
-done
-```
-
-## 微信公众号使用指南
-
-### 为什么需要专门的微信公众号模板？
-
-微信公众号编辑器有严格的限制：
-- ❌ 不支持外部 CSS 样式表（`<style>` 标签会被过滤）
-- ❌ 不支持 class 和 id 选择器
-- ✅ 只支持内联样式（`style` 属性）
-- ✅ 只支持部分 CSS 属性（白名单机制）
-
-### 使用步骤
-
-1. **生成 HTML**
-   ```bash
-   node cli.js article.md --template wechat --output wechat.html
-   ```
-
-2. **启动本地服务器查看**
-   ```bash
-   # 方式一：使用 Python（macOS/Linux 自带）
-   python3 -m http.server 8000
-   # 然后访问 http://localhost:8000/wechat.html
-   
-   # 方式二：使用 npx（需要 Node.js）
-   npx serve .
-   # 然后访问显示的地址
-   ```
-
-3. **全选复制**
-   - 在浏览器中打开生成的页面
-   - 按 `Cmd+A`（macOS）或 `Ctrl+A`（Windows）全选
-   - 按 `Cmd+C`（macOS）或 `Ctrl+C`（Windows）复制
-
-4. **粘贴到公众号**
-   - 打开微信公众号后台
-   - 新建图文消息
-   - 直接粘贴（`Cmd+V` 或 `Ctrl+V`）
-   - ✅ 样式完全保留！
-
-### 支持的样式
-
-微信公众号模板使用的所有 CSS 属性都在白名单内：
-- ✅ 字体：`font-family`, `font-size`, `font-weight`, `font-style`
-- ✅ 颜色：`color`, `background-color`
-- ✅ 间距：`margin`, `padding`, `line-height`
-- ✅ 边框：`border`, `border-left`, `border-bottom`
-- ✅ 布局：`text-align`, `display`
-- ✅ 其他：`border-radius`（部分支持）
-
-### 不支持的样式
-
-以下样式在微信公众号中会被过滤：
-- ❌ `box-shadow`（阴影）
-- ❌ `gradient`（渐变）
-- ❌ `transform`（变换）
-- ❌ `animation`（动画）
-- ❌ `position: fixed/absolute`（定位）
-
-## OpenClaw 调度
-
-目前 PageSkill 不支持直接的 OpenClaw 调度。
-
-**推荐使用方式：**
-
-1. **CLI 工具**：通过 `node cli.js` 生成 HTML 文件
-2. **本地服务器**：启动 `npm run dev` 后在浏览器中使用
-
-**未来计划**：
-- 支持 URL 参数传入 Markdown
-- 支持 postMessage API 调用
-
-## 技术栈
-
-- **Markdown 解析**: [marked](https://github.com/markedjs/marked)
-- **代码高亮**: [highlight.js](https://highlightjs.org/)
-- **纯前端**: 无需服务器，直接在浏览器中运行
-
-## 开发
-
-### 项目结构
-
-```
-PageSkill/
-├── index.html          # 主页面（在线编辑器）
-├── cli.js              # 命令行工具
-├── package.json        # 依赖配置
-├── README.md           # 说明文档
-└── CLI.md              # CLI 详细文档
-```
-
-### 添加新模板
-
-在 `cli.js` 中的 `templates` 对象添加新模板：
-
-```javascript
-const templates = {
-  mytemplate: {
-    id: 'mytemplate',
-    name: '我的模板',
-    description: '模板描述',
-    css: `
-      /* 你的 CSS 样式 */
-    `
-  }
-};
-```
-
-对于需要内联样式的模板（如微信公众号），设置 `inline: true` 并实现自定义渲染器。
-
-## 许可证
+## 📄 许可证
 
 Apache 2.0 + 附加条款
 
 ### ✅ 允许
-- 个人学习、企业内部使用、开源引用（保留作者信息）
+- 个人学习、企业内部使用、开源引用
 
 ### ❌ 禁止（除非书面授权）
-- 去品牌化、商业 SaaS、转售 / 倒卖
+- 去品牌化、商业 SaaS、转售
 
 **商业授权联系**：微信 AIPMAndy
 
-详见 [LICENSE](./LICENSE) 文件。
+## 📮 联系方式
 
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 更新日志
-
-### v1.1.0 (2026-04-21)
-
-**🎯 核心更新：微信公众号完美适配**
-
-#### 新增功能
-- ✨ **微信公众号专用模板** - 完全内联样式，解决公众号编辑器样式丢失问题
-- ✨ **智能样式转换** - 自动将 CSS 转换为微信白名单内的内联样式
-- 🎨 **4 种预设模板** - wechat / modern / minimal / tech
-- 📝 **完整使用指南** - 从生成到发布的完整流程说明
-
-#### 技术改进
-- 🔧 **自定义渲染器** - 基于 marked.js 的完全可控渲染
-- 🎯 **零依赖输出** - 生成的 HTML 完全独立，无外部依赖
-- 📦 **批量处理支持** - 支持命令行批量转换
-- 🚀 **OpenClaw 集成** - 可通过 OpenClaw 工作流直接调用
-
-#### 问题修复
-- 🐛 修复样式复制到公众号后丢失的问题
-- 🐛 修复 class/id 选择器在公众号中不生效的问题
-- 🐛 修复部分 CSS 属性被过滤的问题
-
-#### 文档更新
-- 📝 新增微信公众号使用指南
-- 📝 新增 CLI 详细文档
-- 📝 新增模板对比表格
-- 📝 新增常见问题解答
-
-**使用示例：**
-```bash
-# 生成微信公众号格式
-node cli.js article.md --template wechat --output wechat.html
-
-# 在浏览器打开，全选复制，粘贴到公众号编辑器
-# ✅ 样式完全保留！
-```
+- **作者**: Andy | AI酋长
+- **微信**: AIPMAndy
+- **GitHub**: [@AIPMAndy](https://github.com/AIPMAndy)
 
 ---
 
-### v1.0.0 (2026-04-20)
-- 🎉 首次发布
-- ✨ 支持 3 种主题模板（modern / minimal / tech）
-- ✨ 实时预览功能
-- ✨ 命令行工具
-- ✨ OpenClaw 调度支持
+<div align="center">
+
+**MDskill 品牌产品矩阵**
+
+[🖥️ MDskill Mac](https://github.com/AIPMAndy/MDskill) · [🌐 MDskill-Web](https://github.com/AIPMAndy/MDskill-Web)
+
+Made with ❤️ by Andy
+
+</div>

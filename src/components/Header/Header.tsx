@@ -88,7 +88,7 @@ export default function Header({
           <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
             <FileText size={14} className="text-white" />
           </div>
-          <span className="font-semibold text-gray-800 text-sm hidden sm:inline">PageSkill</span>
+          <span className="font-semibold text-gray-800 text-sm hidden sm:inline">MDskill</span>
           <span className="hidden xl:inline text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">OpenClaw Ready</span>
         </div>
 
