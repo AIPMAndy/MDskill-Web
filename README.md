@@ -3,7 +3,7 @@
 > 🌐 **MDskill 品牌的 Web 端** - 精美的 Markdown 在线排版工具
 
 **MDskill 产品矩阵：**
-- 🖥️ [**MDskill (Mac)**](https://github.com/AIPMAndy/MDskill) - Apple Silicon 原生 Markdown 编辑器（开发中）
+- 🖥️ [**MDskill (Mac)**](https://github.com/AIPMAndy/MDskill) - 专业的 Markdown 编辑与排版工具（已发布 v1.2.0）
 - 🌐 **MDskill-Web** - 在线排版工具（本项目）
 
 ---
@@ -52,22 +52,36 @@ node cli.js <markdown-file> [options]
 
 **试试 MDskill Mac 版！**
 
-🖥️ [**MDskill (Mac)**](https://github.com/AIPMAndy/MDskill) - Apple Silicon 原生 Markdown 编辑器
+🖥️ [**MDskill (Mac)**](https://github.com/AIPMAndy/MDskill) - 专业的 Markdown 编辑与排版工具
 
-**为什么选择 Mac 版：**
-- ⚡️ **极致性能** - 原生 Swift 开发，启动 < 1秒，内存 < 100MB
-- 🎨 **精美设计** - 专为 macOS 设计的现代界面
-- 🇨🇳 **中文优化** - 完美的中英混排、标点挤压、字体回退
-- 🔄 **无缝同步** - 与 MDskill-Web 数据互通（开发中）
-- 📦 **本地优先** - 数据完全掌控，支持 iCloud 同步
+**Mac 版核心功能：**
+- 🤖 **AI 文本转 Markdown** - 智能识别文本结构，一键转换
+- 🎨 **13 种精美主题** - GitHub、掘金、知乎、少数派等风格
+- 📱 **公众号一键复制** - 保留完整样式，直接粘贴发布
+- 📄 **专业导出** - PDF、HTML、图片多格式导出
+- ⚡️ **实时预览** - 所见即所得，编辑与预览同步
+
+**版本对比：**
+| 功能 | 免费版 | 专业版 |
+|------|--------|--------|
+| AI 文本转 Markdown | ❌ | ✅ |
+| 精美主题 | 3 种 | 13 种 |
+| 公众号一键复制 | ❌ | ✅ |
+| PDF 专业导出 | ❌ | ✅ |
+| 无水印导出 | ❌ | ✅ |
+
+**下载安装：**
+- [下载 DMG 安装包](https://github.com/AIPMAndy/MDSKILL/releases/download/v1.2.0/MDskill-1.2.0-arm64.dmg) (94 MB)
+- 支持 macOS 10.13+，Apple Silicon 和 Intel 处理器
 
 **MDskill-Web vs MDskill Mac：**
 | 特性 | MDskill-Web | MDskill Mac |
 |------|-------------|-------------|
 | 平台 | 浏览器（全平台） | macOS 专属 |
-| 性能 | 中等 | 极致 |
-| 使用场景 | 快速排版、公众号发布 | 长时间写作、专业编辑 |
-| 价格 | 免费 | $19.99 |
+| AI 功能 | ❌ | ✅ AI 文本转 Markdown |
+| 主题数量 | 13 种 | 13 种（专业版）|
+| 使用场景 | 快速排版、在线编辑 | 专业创作、长期使用 |
+| 价格 | 完全免费 | 免费版 + 专业版 |
 
 ---
 
