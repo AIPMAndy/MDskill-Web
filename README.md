@@ -8,18 +8,36 @@
 
 ---
 
+## 📦 版本说明
+
+**本仓库为免费版（开源）：**
+- ✅ 3 种基础主题（Minimal、Business、Tech）
+- ✅ 基础 Markdown 编辑
+- ✅ 实时预览
+- ✅ 公众号适配
+- ✅ 导出功能
+
+**高级版（13 种精美主题）：**
+- 🎨 包含 10 种额外精美主题（Literary、Magazine、Story、Latepoint、Financial、Anthropic、Elegant、Deepread、NYT、Apple）
+- 💎 更多高级功能
+- 📱 **获取方式：联系微信 AIPMAndy**
+
+---
+
 ## 📸 产品截图
 
 <img width="1462" height="798" alt="截屏2026-04-25 08 44 00" src="https://github.com/user-attachments/assets/abd2d6b0-0964-4680-8176-f07cc005ed9e" />
 
 ## ✨ 特性
 
-- 🎨 **13 种主题模板** - 覆盖商务、创意、技术、极简、故事 5 大场景
+- 🎨 **3 种基础主题** - Minimal、Business、Tech（高级版提供 13 种主题）
 - 📱 **微信公众号适配** - 完全内联样式，直接复制粘贴到公众号编辑器
 - 🚀 **实时预览** - 边写边看，所见即所得
 - 💾 **一键导出** - 支持导出为 HTML 和 PNG 图片
 - 🔧 **命令行工具** - 支持批量处理和自动化
 - 🌐 **OpenClaw 调度** - 可通过 OpenClaw 直接调用
+
+**💎 想要 13 种精美主题？联系微信 AIPMAndy 获取高级版**
 
 ## 🚀 快速开始
 

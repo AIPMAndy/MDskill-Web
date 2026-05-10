@@ -691,11 +691,16 @@ export const appleTemplate: Template = {
   },
 }
 
-export const allTemplates: Template[] = [
+// 免费版：3 种基础主题
+export const freeTemplates: Template[] = [
   minimalTemplate,
   businessTemplate,
-  literaryTemplate,
   techTemplate,
+]
+
+// 高级版：10 种精美主题（需要联系微信 AIPMAndy 获取）
+export const premiumTemplates: Template[] = [
+  literaryTemplate,
   magazineTemplate,
   storyTemplate,
   latepointTemplate,
@@ -705,6 +710,13 @@ export const allTemplates: Template[] = [
   deepreadTemplate,
   nytTemplate,
   appleTemplate,
+]
+
+// 所有主题（免费版只显示前 3 个）
+export const allTemplates: Template[] = [
+  ...freeTemplates,
+  // 高级版主题已移除，需要联系微信 AIPMAndy 获取完整版
+  // ...premiumTemplates,
 ]
 
 export function getTemplateById(id: string): Template {
