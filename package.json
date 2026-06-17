@@ -1,7 +1,7 @@
 {
-  "name": "articlelayout",
+  "name": "mdskill-web",
   "version": "1.0.0",
-  "description": "文章排版神器 - 一键生成精美排版",
+  "description": "MDskill-Web - 精美的 Markdown 在线排版工具",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,10 +11,11 @@
     "lint:eslint": "eslint . --ext ts,tsx"
   },
   "keywords": [
-    "wechat",
-    "layout",
+    "mdskill",
     "markdown",
     "typesetting",
+    "wechat",
+    "layout",
     "公众号",
     "排版",
     "article",
@@ -24,7 +25,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AIPMAndy/ArticleLayout.git"
+    "url": "https://github.com/AIPMAndy/MDskill-Web.git"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.0",

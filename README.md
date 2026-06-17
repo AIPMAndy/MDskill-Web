@@ -1,5 +1,10 @@
 # MDskill-Web
 
+[![CI](https://github.com/AIPMAndy/MDskill-Web/actions/workflows/ci.yml/badge.svg)](https://github.com/AIPMAndy/MDskill-Web/actions/workflows/ci.yml)
+[![Deploy](https://github.com/AIPMAndy/MDskill-Web/actions/workflows/deploy.yml/badge.svg)](https://github.com/AIPMAndy/MDskill-Web/actions/workflows/deploy.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/AIPMAndy/MDskill-Web?style=social)](https://github.com/AIPMAndy/MDskill-Web)
+
 > 🌐 **MDskill 品牌的 Web 端** - 精美的 Markdown 在线排版工具
 
 **MDskill 产品矩阵：**
