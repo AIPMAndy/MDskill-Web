@@ -1,6 +1,6 @@
-# PageSkill CLI
+# MDskill CLI
 
-命令行版本的 PageSkill，支持通过命令行快速将 Markdown 转换为精美排版的 HTML。
+命令行版本的 MDskill，支持通过命令行快速将 Markdown 转换为精美排版的 HTML。
 
 ## 🚀 快速开始
 
@@ -62,21 +62,21 @@ done
 ### 示例 4：配合 OpenClaw 使用
 ```bash
 # 在 OpenClaw Skill 中调用
-node /path/to/PageSkill/cli.js content.md --template modern --output result.html
+node /path/to/MDskill/cli.js content.md --template modern --output result.html
 ```
 
 ## 🔧 集成到 OpenClaw
 
-PageSkill CLI 可以无缝集成到 OpenClaw 工作流中：
+MDskill CLI 可以无缝集成到 OpenClaw 工作流中:
 
 ```javascript
 // 在 SKILL.md 中调用
-exec(`node /path/to/PageSkill/cli.js ${inputFile} --template modern --output ${outputFile}`)
+exec(`node /path/to/MDskill/cli.js ${inputFile} --template modern --output ${outputFile}`)
 ```
 
 ## 📦 依赖
 
-CLI 工具依赖 PageSkill 的 npm 包，确保已安装：
+CLI 工具依赖 MDskill 的 npm 包，确保已安装:
 
 ```bash
 npm install
@@ -110,7 +110,7 @@ npm install
 ## 🔮 未来计划
 
 - [ ] 支持自定义 CSS 模板
-- [ ] 支持配置文件（.pageskillrc）
+- [ ] 支持配置文件（.mdskillrc）
 - [ ] 支持 PDF 导出
 - [ ] 支持图片优化
 - [ ] 支持多文件合并
@@ -121,4 +121,4 @@ Apache-2.0
 
 ---
 
-**GitHub**: [AIPMAndy/PageSkill](https://github.com/AIPMAndy/PageSkill)
+**GitHub**: [AIPMAndy/MDskill-Web](https://github.com/AIPMAndy/MDskill-Web)
