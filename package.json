@@ -1,7 +1,7 @@
 {
-  "name": "articlelayout",
+  "name": "mdskill-web",
   "version": "1.2.0",
-  "description": "文章排版神器 - 一键生成精美排版",
+  "description": "MDskill - 专业的 Markdown 编辑器，33 个精美主题",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,7 +24,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AIPMAndy/ArticleLayout.git"
+    "url": "https://github.com/AIPMAndy/MDskill-Web.git"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.0",
