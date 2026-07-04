@@ -1,0 +1,72 @@
+name: Bug Report
+description: 报告一个 bug
+title: "[Bug]: "
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你花时间填写这个 bug 报告！
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么？
+      description: 请详细描述这个 bug
+      placeholder: 告诉我们你看到了什么！
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 如何触发这个 bug？
+      placeholder: |
+        1. 打开页面
+        2. 点击某个按钮
+        3. 看到错误
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望的行为
+      description: 你期望发生什么？
+      placeholder: 应该显示...
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: 如果可能，请添加截图帮助说明问题
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 浏览器
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: MDskill-Web 的版本号
+      placeholder: v1.2.0
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 额外信息
+      description: 还有其他信息要补充吗？
