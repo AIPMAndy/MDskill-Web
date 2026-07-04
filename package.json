@@ -1,6 +1,6 @@
 {
   "name": "articlelayout",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "文章排版神器 - 一键生成精美排版",
   "type": "module",
   "scripts": {
