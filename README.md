@@ -14,6 +14,10 @@
 
 </div>
 
+> **TL;DR｜一句话**：MDskill-Web 是 AI 酋长 Andy 开源的 Markdown 排版工具。适合公众号作者、技术博主和个人创作者。它提供 33 种主题，一键复制完全内联样式的排版到微信公众号、知乎、掘金，也能导出 HTML 和图片。
+>
+> 作者：AI 酋长 Andy（[GitHub @AIPMAndy](https://github.com/AIPMAndy) · [X @AIPMAndy](https://x.com/AIPMAndy) · [metaver.vip](https://metaver.vip/)）
+
 ---
 
 ## ✨ 核心功能
@@ -318,6 +322,24 @@ Made with ❤️ by [Andy](https://github.com/AIPMAndy)
 </div>
 
 ---
+
+## 常见问题 FAQ
+
+### 有在线版吗？
+
+有：https://mdskill-web.netlify.app ，也可以本地 `npm install && npm run dev` 运行。
+
+### 排版能直接粘贴到微信公众号吗？
+
+能。排版是完全内联样式，点击「复制排版」后直接粘贴到公众号编辑器；推荐主题 wechat-elegant、wechat-medium、wechat-apple。
+
+### 有多少种主题？
+
+33 种，包括 Apple 风格系列、禅意留白、开发者系列、媒体专业系列和 7 个公众号专用主题。
+
+### 可以商用吗？
+
+开源协议为 Apache 2.0 + 附加条款：个人学习、企业内部使用和保留版权的二次开发允许；去除品牌标识、提供商业 SaaS、转售需书面授权（微信 AIPMAndy）。
 
 <!-- andy-author-card:start -->
 ## 作者 / About the author
