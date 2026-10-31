@@ -1,72 +1,63 @@
-import React from 'react'
-import { Smartphone, Tablet, Monitor } from 'lucide-react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
+import { Eye, Monitor, Smartphone, Tablet } from 'lucide-react'
+import type { ViewMode } from '../../utils/openclaw'
 
 interface PreviewProps {
   html: string
   css: string
   templateId: string
-  viewMode: 'mobile' | 'tablet' | 'desktop'
+  templateName: string
+  viewMode: ViewMode
+  onViewModeChange: (mode: ViewMode) => void
 }
 
-const viewModeWidths = {
-  mobile: '390px',
-  tablet: '820px',
-  desktop: '100%',
-}
+const modes: { mode: ViewMode; label: string; icon: typeof Monitor }[] = [
+  { mode: 'mobile', label: '手机预览', icon: Smartphone },
+  { mode: 'tablet', label: '平板预览', icon: Tablet },
+  { mode: 'desktop', label: '桌面预览', icon: Monitor },
+]
 
-const viewModeMeta = {
-  mobile: { label: '移动端', icon: Smartphone },
-  tablet: { label: '平板端', icon: Tablet },
-  desktop: { label: '桌面端', icon: Monitor },
-}
+export default function Preview({ html, css, templateId, templateName, viewMode, onViewModeChange }: PreviewProps) {
+  const surfaceRef = useRef<HTMLDivElement>(null)
+  const paperRef = useRef<HTMLElement>(null)
+  const [availableWidth, setAvailableWidth] = useState(390)
+  const [paperHeight, setPaperHeight] = useState(0)
 
-export default function Preview({ html, css, templateId, viewMode }: PreviewProps) {
-  const previewWidth = viewModeWidths[viewMode]
-  const isMobileOrTablet = viewMode !== 'desktop'
-  const { label, icon: Icon } = viewModeMeta[viewMode]
+  useLayoutEffect(() => {
+    const surface = surfaceRef.current
+    const paper = paperRef.current
+    if (!surface || !paper) return
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.target === surface && entry.contentRect.width > 0) setAvailableWidth(entry.contentRect.width)
+        if (entry.target === paper) setPaperHeight(entry.borderBoxSize[0]?.blockSize || paper.offsetHeight)
+      }
+    })
+    observer.observe(surface)
+    observer.observe(paper)
+    return () => observer.disconnect()
+  }, [])
+
+  const paperWidth = viewMode === 'mobile' ? 390 : viewMode === 'tablet' ? 820 : Math.min(availableWidth, 900)
+  const scale = Math.min(1, availableWidth / paperWidth)
 
   return (
-    <div className="h-full preview-surface overflow-y-auto flex justify-center">
-      <div className="pt-4 pb-8 px-4 w-full">
-        <div className="mb-3 text-xs text-gray-500 flex items-center gap-2">
-          <Icon size={14} />
-          <span>{label}预览</span>
-          <span className="text-gray-300">•</span>
-          <span className="uppercase tracking-wide">template {templateId}</span>
-        </div>
-
-        <div
-          className={[
-            'transition-all duration-300 ease-out',
-            isMobileOrTablet
-              ? 'mx-auto shadow-2xl rounded-2xl overflow-hidden border border-gray-200 bg-white'
-              : 'w-full rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm',
-          ].join(' ')}
-          style={{
-            width: isMobileOrTablet ? previewWidth : '100%',
-            maxWidth: isMobileOrTablet ? previewWidth : '100%',
-            minHeight: isMobileOrTablet ? '640px' : 'auto',
-          }}
-        >
-          {isMobileOrTablet && (
-            <div className="bg-gray-900/95 px-4 py-2 flex items-center justify-center">
-              <div className="w-24 h-1 bg-gray-600 rounded-full" />
-            </div>
-          )}
-
-          <style dangerouslySetInnerHTML={{ __html: css }} />
-          <div
-            className={`article-preview template-${templateId} animate-fade-in`}
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-
-          {isMobileOrTablet && (
-            <div className="bg-gray-900/95 px-4 py-3 flex items-center justify-center">
-              <div className="w-10 h-10 rounded-full border-2 border-gray-600" />
-            </div>
-          )}
+    <section className="preview-panel" aria-label="文章排版预览">
+      <div className="panel-heading preview-heading"><div><Eye size={15} /><h2>实时预览</h2><span className="preview-theme-name">{templateName}</span></div>
+        <div className="preview-size-switch" role="group" aria-label="预览尺寸">
+          {modes.map(({ mode, label, icon: Icon }) => <button key={mode} className={`size-button ${viewMode === mode ? 'is-active' : ''}`} onClick={() => onViewModeChange(mode)} aria-label={label} aria-pressed={viewMode === mode} title={label}><Icon size={15} /></button>)}
         </div>
       </div>
-    </div>
+      <div className="preview-surface" ref={surfaceRef}>
+        <div className="paper-caption"><span>文章效果</span><span>{viewMode === 'mobile' ? '手机 · 390 px' : viewMode === 'tablet' ? '平板 · 820 px' : '桌面阅读'}</span></div>
+        <div className="preview-stage" style={{ width: paperWidth * scale, height: paperHeight ? paperHeight * scale : undefined }}>
+        <article ref={paperRef} className="preview-paper" style={{ width: paperWidth, transform: `scale(${scale})` }} aria-label={`${templateName}排版效果`}>
+          <style dangerouslySetInnerHTML={{ __html: css }} />
+          {html ? <div className={`article-preview template-${templateId}`} dangerouslySetInnerHTML={{ __html: html }} /> : <div className="preview-empty"><Eye size={26} strokeWidth={1.2} /><h3>好文章，从第一行开始。</h3><p>在编辑区写下文字，这里会实时呈现。</p></div>}
+        </article>
+        </div>
+        <p className="preview-footnote">好内容，值得好排版。</p>
+      </div>
+    </section>
   )
 }

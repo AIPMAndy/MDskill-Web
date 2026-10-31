@@ -54,8 +54,8 @@ function Toast({
   }, [onClose])
 
   return (
-    <div className="fixed top-20 right-4 z-[300] toast-enter">
-      <div className="bg-gray-800 text-white px-4 py-2.5 rounded-lg shadow-lg text-sm flex items-center gap-2">
+    <div className="workspace-toast toast-enter" role={type === 'error' ? 'alert' : 'status'}>
+      <div className="toast-content">
         <span className={type === 'success' ? 'text-green-400' : 'text-red-400'}>
           {type === 'success' ? '✓' : '✕'}
         </span>
@@ -72,10 +72,11 @@ export default function App() {
   })
   const [template, setTemplate] = useState<Template>(() => {
     const savedId = localStorage.getItem('articlelayout_template')
-    return allTemplates.find(t => t.id === savedId) || allTemplates[0]
+    return allTemplates.find(t => t.id === savedId) || allTemplates.find(t => t.id === 'apple-light') || allTemplates[0]
   })
   const [viewMode, setViewMode] = useState<ViewMode>('desktop')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [mobilePanel, setMobilePanel] = useState<'editor' | 'preview'>('editor')
   const [posterOpen, setPosterOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null)
@@ -245,12 +246,10 @@ export default function App() {
   }, [darkMode, dispatchOpenClawCommand, markdown, template.id, viewMode])
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden app-shell">
+    <div className="app-shell">
       <Header
         template={template}
         markdown={markdown}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         onCopyRich={handleCopyRich}
         onCopyHTML={handleCopyHTML}
@@ -260,7 +259,7 @@ export default function App() {
         onToggleDark={() => setDarkMode(!darkMode)}
       />
 
-      <div className="flex-1 flex overflow-hidden">
+      <main className="workspace-body">
         <Sidebar
           currentTemplate={template}
           onSelectTemplate={setTemplate}
@@ -268,21 +267,27 @@ export default function App() {
           onClose={() => setSidebarOpen(false)}
         />
 
-        <div className="flex-1 flex overflow-hidden">
-          <div className="w-1/2 min-w-0 border-r border-gray-200">
+        <div className="workspace-main">
+          <div className="mobile-panel-tabs" role="group" aria-label="工作区视图">
+            <button aria-pressed={mobilePanel === 'editor'} onClick={() => setMobilePanel('editor')}>内容编辑</button>
+            <button aria-pressed={mobilePanel === 'preview'} onClick={() => setMobilePanel('preview')}>排版预览</button>
+          </div>
+          <div className={`editor-column ${mobilePanel === 'editor' ? 'mobile-active' : ''}`}>
             <Editor value={markdown} onChange={setMarkdown} />
           </div>
 
-          <div className="w-1/2 min-w-0">
+          <div className={`preview-column ${mobilePanel === 'preview' ? 'mobile-active' : ''}`}>
             <Preview
               html={previewHTML}
               css={previewCSS}
               templateId={template.id}
+              templateName={template.name}
               viewMode={viewMode}
+              onViewModeChange={setViewMode}
             />
           </div>
         </div>
-      </div>
+      </main>
 
       <PosterModal
         isOpen={posterOpen}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import html2canvas from 'html2canvas'
 import type { Template } from '../../templates'
 import { extractTitle } from '../../utils/renderer'
@@ -35,6 +35,26 @@ export default function PosterModal({ isOpen, onClose, markdown, template }: Pos
   const [selectedStyle, setSelectedStyle] = useState(posterStyles[0])
   const [generating, setGenerating] = useState(false)
   const posterRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+    const previousFocus = document.activeElement as HTMLElement | null
+    const dialog = dialogRef.current
+    const buttons = () => Array.from(dialog?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') || [])
+    buttons()[0]?.focus()
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+      if (event.key !== 'Tab') return
+      const focusable = buttons()
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => { document.removeEventListener('keydown', handleKey); previousFocus?.focus() }
+  }, [isOpen, onClose])
 
   const title = extractTitle(markdown)
 
@@ -80,11 +100,11 @@ export default function PosterModal({ isOpen, onClose, markdown, template }: Pos
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] flex flex-col">
+      <div ref={dialogRef} className="poster-dialog rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90dvh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="poster-title">
         {/* Modal header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-800">🎨 生成封面海报</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <h2 id="poster-title" className="text-lg font-semibold text-gray-800">生成封面海报</h2>
+          <button onClick={onClose} aria-label="关闭海报" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -95,7 +115,7 @@ export default function PosterModal({ isOpen, onClose, markdown, template }: Pos
             <div className="flex justify-center">
               <div
                 ref={posterRef}
-                className="w-[360px] h-[480px] rounded-2xl overflow-hidden relative flex flex-col justify-between p-8"
+                className="poster-preview-artwork w-[360px] h-[480px] rounded-2xl overflow-hidden relative flex flex-col justify-between p-8"
                 style={{
                   background: `linear-gradient(135deg, ${selectedStyle.bgFrom}, ${selectedStyle.bgTo})`,
                 }}
@@ -156,7 +176,7 @@ export default function PosterModal({ isOpen, onClose, markdown, template }: Pos
                 {/* Footer */}
                 <div className="relative z-10 flex items-center justify-between pt-4 border-t" style={{ borderColor: `${selectedStyle.textColor}20` }}>
                   <span className="text-xs opacity-50" style={{ color: selectedStyle.textColor }}>
-                    ArticleLayout
+                    MDskill
                   </span>
                   <span className="text-xs opacity-50" style={{ color: selectedStyle.textColor }}>
                     by Andy
@@ -228,7 +248,7 @@ export default function PosterModal({ isOpen, onClose, markdown, template }: Pos
           <button
             onClick={handleDownload}
             disabled={generating}
-            className="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-60"
+            className="poster-download flex items-center gap-2 px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-60"
           >
             {generating ? (
               <>
