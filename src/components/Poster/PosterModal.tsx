@@ -54,10 +54,21 @@ export default function PosterModal({ isOpen, onClose, markdown, template }: Pos
         useCORS: true,
         backgroundColor: null,
       })
-      const link = document.createElement('a')
-      link.download = `${title}-海报.png`
-      link.href = canvas.toDataURL('image/png')
-      link.click()
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((image) => {
+          if (image) resolve(image)
+          else reject(new Error('Poster image encoding failed'))
+        }, 'image/png')
+      })
+      const url = URL.createObjectURL(blob)
+      try {
+        const link = document.createElement('a')
+        link.download = `${title}-海报.png`
+        link.href = url
+        link.click()
+      } finally {
+        URL.revokeObjectURL(url)
+      }
     } catch (err) {
       console.error('Poster generation failed:', err)
     } finally {
