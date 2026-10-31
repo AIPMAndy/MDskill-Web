@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/AIPMAndy/MDskill-Web/pulls)
 
-[在线体验](https://mdskill-web.netlify.app) · [功能介绍](#-核心功能) · [主题预览](#-33-种专业主题) · [快速开始](#-快速开始)
+[在线体验](https://aipmandy.github.io/MDskill-Web/) · [功能介绍](#-核心功能) · [主题预览](#-33-种专业主题) · [快速开始](#-快速开始)
 
 <img src="screenshot-homepage.png" alt="MDskill-Web 首页" width="800"/>
 
@@ -138,7 +138,7 @@
 
 ### 方式一：在线使用（推荐）
 
-访问 [https://mdskill-web.netlify.app](https://mdskill-web.netlify.app) 立即开始使用
+访问 [https://aipmandy.github.io/MDskill-Web/](https://aipmandy.github.io/MDskill-Web/) 立即开始使用
 
 ### 方式二：本地部署
 
@@ -158,6 +158,23 @@ npm run dev
 npm run build
 # 部署 dist/ 目录到任意静态服务器
 ```
+
+### GitHub Pages 自动部署
+
+正式地址：https://aipmandy.github.io/MDskill-Web/
+
+推送到 `main` 后，GitHub Actions 会自动安装依赖、检查 TypeScript、构建并发布到 GitHub Pages。仓库的 **Settings → Pages → Source** 使用 **GitHub Actions**。
+
+本地检查相同的部署构建：
+
+```bash
+npm ci
+npm run build -- --base=/MDskill-Web/
+npm run preview -- --base=/MDskill-Web/
+# 访问 http://localhost:4173/MDskill-Web/
+```
+
+原 Netlify 地址目前不可用，请使用上面的正式地址。`npm run build` 仍可构建部署在域名根目录的版本。
 
 ### 方式三：命令行工具
 
@@ -327,7 +344,7 @@ Made with ❤️ by [Andy](https://github.com/AIPMAndy)
 
 ### 有在线版吗？
 
-有：https://mdskill-web.netlify.app ，也可以本地 `npm install && npm run dev` 运行。
+有：https://aipmandy.github.io/MDskill-Web/ ，也可以本地 `npm install && npm run dev` 运行。
 
 ### 排版能直接粘贴到微信公众号吗？
 

@@ -16,7 +16,7 @@
 
 <img src="assets/demo.gif" width="760" alt="PageSkill demo" />
 
-**[⚡ Live Demo](https://pageskill-demo.vercel.app)** · **[📚 Wiki](https://github.com/AIPMAndy/PageSkill/wiki)** · **[🌟 Star the project](https://github.com/AIPMAndy/PageSkill/stargazers)**
+**[⚡ Live Demo](https://aipmandy.github.io/MDskill-Web/)** · **[📚 Wiki](https://github.com/AIPMAndy/PageSkill/wiki)** · **[🌟 Star the project](https://github.com/AIPMAndy/PageSkill/stargazers)**
 
 </div>
 
