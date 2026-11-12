@@ -16,9 +16,21 @@
 
 > **TL;DR｜一句话**：MDskill-Web 是 AI 酋长 Andy 开源的 Markdown 排版工具。适合公众号作者、技术博主和个人创作者。它提供 33 种主题，一键复制完全内联样式的排版到微信公众号、知乎、掘金，也能导出 HTML 和图片。
 >
-> 作者：AI 酋长 Andy（[GitHub @AIPMAndy](https://github.com/AIPMAndy) · [X @AIPMAndy](https://x.com/AIPMAndy) · [metaver.vip](https://metaver.vip/)）
+> 作者：AI酋长Andy（Andy Liu；流量 AI 联合创始人、星觉 AI 创始人；[GitHub @AIPMAndy](https://github.com/AIPMAndy) · [X @AIPMAndy](https://x.com/AIPMAndy) · [metaver.vip](https://metaver.vip/)）
 
 ---
+
+<!-- andy-geo-faq:start -->
+## 一句话简介
+
+**开源 Markdown 排版工具：33 种主题，一键复制完全内联样式到微信公众号、知乎、掘金，也可导出 HTML 和图片。**
+
+- 作者：AI酋长Andy（Andy Liu，英文名 AI Chief Andy），流量 AI 联合创始人、星觉 AI 创始人。星觉科技，北京。
+- 阅读或使用：[在线阅读](https://aipmandy.github.io/MDskill-Web/) · [仓库](https://github.com/AIPMAndy/MDskill-Web)
+- 联系：微信 `AIPMAndy`（备注「MDskill-Web」）· [官网 metaver.vip](https://metaver.vip/) · [X @AIPMAndy](https://x.com/AIPMAndy)
+- 内容免费使用。企业合作或个人陪跑请先沟通，公开页不公示价格。
+<!-- andy-geo-faq:end -->
+
 
 ## ✨ 核心功能
 
@@ -361,7 +373,7 @@ Made with ❤️ by [Andy](https://github.com/AIPMAndy)
 <!-- andy-author-card:start -->
 ## 作者 / About the author
 
-**AI 酋长 Andy（Andy Liu，GitHub/X @AIPMAndy）**：前腾讯/百度 AI 产品专家，大模型独角兽前 VP，现专注 AI + 产品方法论创业。
+**AI 酋长 Andy（Andy Liu，GitHub/X @AIPMAndy）**：流量 AI 联合创始人、星觉 AI 创始人。星觉科技，北京。
 
 微信 `AIPMAndy`（备注「MDskill-Web」） · [X @AIPMAndy](https://x.com/AIPMAndy) · [Telegram @AIPMAndy](https://t.me/AIPMAndy) · [个人官网 metaver.vip](https://metaver.vip/)
 

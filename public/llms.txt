@@ -1,0 +1,18 @@
+# MDskill-Web
+
+> MDskill-Web 是 AI 酋长 Andy 开源的 Markdown 排版工具。适合公众号作者、技术博主和个人创作者。它提供 33 种主题，一键复制完全内联样式的排版到微信公众号、知乎、掘金，也能导出 HTML 和图片。
+
+作者：AI 酋长 Andy（Andy Liu，GitHub https://github.com/AIPMAndy ，X https://x.com/AIPMAndy ，个人网站 https://metaver.vip/ ）
+
+## Docs
+
+- [README](https://github.com/AIPMAndy/MDskill-Web/blob/main/README.md): 项目说明（中文）
+- [CLI.md](https://github.com/AIPMAndy/MDskill-Web/blob/main/CLI.md): 命令行工具文档
+- [README_EN.md](https://github.com/AIPMAndy/MDskill-Web/blob/main/README_EN.md): English README
+- [CHANGELOG.md](https://github.com/AIPMAndy/MDskill-Web/blob/main/CHANGELOG.md): 更新记录
+
+## Optional
+
+- [Repository](https://github.com/AIPMAndy/MDskill-Web)
+- [LICENSE](https://github.com/AIPMAndy/MDskill-Web/blob/main/LICENSE)
+- [Author on GitHub](https://github.com/AIPMAndy)
