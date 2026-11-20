@@ -19,12 +19,6 @@ const INLINE_STYLE_PROPERTIES = [
   'overflow-wrap',
   'word-wrap',
   'display',
-  'width',
-  'max-width',
-  'min-width',
-  'height',
-  'max-height',
-  'min-height',
   'margin-top',
   'margin-right',
   'margin-bottom',
@@ -320,6 +314,25 @@ function inlineComputedStyles(root: HTMLElement) {
         element.style.setProperty(property, value)
       }
     })
+  })
+
+  // The editor preview has a fixed 680px width and measured height.
+  // WeChat reflows to the phone/editor width, so copying those values would
+  // create an oversized fixed canvas. Let the container flow and keep images
+  // responsive instead.
+  root.style.setProperty('width', 'auto')
+  root.style.setProperty('max-width', '100%')
+  root.style.setProperty('height', 'auto')
+  root.querySelectorAll<HTMLImageElement>('img').forEach((image) => {
+    image.style.setProperty('max-width', '100%')
+    image.style.setProperty('height', 'auto')
+  })
+  root.querySelectorAll<HTMLTableElement>('table').forEach((table) => {
+    table.style.setProperty('width', '100%')
+  })
+  root.querySelectorAll<HTMLPreElement>('pre').forEach((pre) => {
+    pre.style.setProperty('white-space', 'pre-wrap')
+    pre.style.setProperty('word-break', 'break-all')
   })
 }
 
